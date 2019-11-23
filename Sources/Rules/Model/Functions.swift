@@ -1,6 +1,5 @@
 //
-//  Expressions.swift
-//  Rules
+//  Functions.swift
 //
 //  Created by Michel Tilman on 23/11/2019.
 //  Copyright © 2019 Dotted.Pair.
