@@ -20,13 +20,14 @@ public protocol Expression {
     
 }
 
+
 /**
  Default expression evaluation.
  */
-extension Expression {
+public extension Expression {
     
     /// By default an expression evaluates to self.
-    public func eval<C>(_ context: C) throws -> Self {
+    func eval<C>(_ context: C) throws -> Self {
         self
     }
 
@@ -36,13 +37,10 @@ extension Expression {
 /**
  Evaluation errors.
  */
-public enum EvalError: Error {
+public enum EvalError: Error, Equatable {
     
     /// Error thrown when evaluating an expression in the wrong context type.
     case invalidContext(message: String)
-
-    /// Error thrown when evaluating an expression in the wrong context type.
-    case nilValue(message: String)
 
 }
 
@@ -89,13 +87,13 @@ extension KeyPath: Expression {
  'Abstract' superclass representing state and initialization of operations involving one operand.
  Unary operations can be used as expressions.
  */
-public class UnaryOperation<A>: Expression {
+open class UnaryOperation<A>: Expression {
     
     // The single operand.
-    let operand: A
+    public let operand: A
     
     // Sole initializer.
-    init(_ operand: A) {
+    public init(_ operand: A) {
         self.operand = operand
     }
     
@@ -106,13 +104,13 @@ public class UnaryOperation<A>: Expression {
  'Abstract' superclass representing state and initialization of operations involving two operands.
  Binary operations can be used as expressions.
  */
-public class BinaryOperation<A, B>: Expression {
+open class BinaryOperation<A, B>: Expression {
     
-    // Left and right operands.
-    let lhs: A, rhs: B
+    // Left- and right-hand-side operands.
+    public let lhs: A, rhs: B
     
     // Sole initializer.
-    init(_ lhs: A, _ rhs: B) {
+    public init(_ lhs: A, _ rhs: B) {
         self.lhs = lhs
         self.rhs = rhs
     }
