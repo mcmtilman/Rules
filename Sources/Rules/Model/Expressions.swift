@@ -88,9 +88,9 @@ extension KeyPath: Expression {
 
 /**
  'Abstract' superclass representing state and initialization of operations involving one operand.
- Using structs for the concrete types requires more code.
+ Unary operations can be used as expressions.
  */
-public class UnaryOperation<A> {
+public class UnaryOperation<A>: Expression {
     
     // The single operand.
     let operand: A
@@ -105,9 +105,9 @@ public class UnaryOperation<A> {
 
 /**
  'Abstract' superclass representing state and initialization of operations involving two operands.
- Using structs for the concrete types requires more code.
+ Binary operations can be used as expressions.
  */
-public class BinaryOperation<A, B> {
+public class BinaryOperation<A, B>: Expression {
     
     // Left and right operands.
     let lhs: A, rhs: B
