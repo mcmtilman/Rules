@@ -20,7 +20,7 @@ class ExpressionsTests: XCTestCase {
     
     ///// Test if evaluating a String keypath in an Int context throws an invalidContext error.
     func testEvalInvalidContext() {
-        let context: String? = nil
+        let context = 0
         let keyPath = \String.self
         
         XCTAssertThrowsError(try keyPath.eval(context)) { error in
