@@ -79,9 +79,9 @@ extension KeyPath: Expression {
     /// Conformance of the context type with the keypath's root type is  checked  at run-time.
     /// Failure to comply results in an *invalidContext* error.
     public func eval<C>(_ context: C) throws -> Value {
-         guard let context = context as? Root else { throw EvalError.invalidContext(message: "Context of type \(Root.self) expected") }
+         guard let root = context as? Root else { throw EvalError.invalidContext(message: "Context of type \(Root.self) expected") }
 
-         return context[keyPath: self]
+         return root[keyPath: self]
      }
 
  }
