@@ -4,6 +4,8 @@ import RulesTests
 
 var tests = [XCTestCaseEntry]()
 
-tests += ExpressionTests.allTests()
+tests += ExpressionsTests.allTests()
+tests += FunctionsTests.allTests()
+tests += PredicatesTests.allTests()
  
 XCTMain(tests)
