@@ -14,7 +14,7 @@ import Rules
 /**
  Tests standard predicates.
  */
-class PredicatesTests: XCTestCase {
+class PredicateTests: XCTestCase {
     
     // Test if we can detect nil values.
     func testEvalIsNil() {
@@ -38,7 +38,7 @@ class PredicatesTests: XCTestCase {
 /**
  Standard predicates.
  */
-extension PredicatesTests {
+extension PredicateTests {
     
     typealias IsNil = Predicates.IsNil
 
@@ -48,7 +48,7 @@ extension PredicatesTests {
 /**
  Test suite.
  */
-extension PredicatesTests {
+extension PredicateTests {
     
     static var allTests = [
         ("testEvalIsNil", testEvalIsNil),

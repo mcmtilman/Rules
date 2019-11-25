@@ -14,7 +14,7 @@ import Rules
 /**
  Tests core expressions.
  */
-class ExpressionsTests: XCTestCase {
+class ExpressionTests: XCTestCase {
     
     // MARK: Testing context
     
@@ -52,7 +52,7 @@ class ExpressionsTests: XCTestCase {
 /**
  Test suite.
  */
-extension ExpressionsTests {
+extension ExpressionTests {
     
     static var allTests = [
         ("testEvalInvalidContext", testEvalInvalidContext),

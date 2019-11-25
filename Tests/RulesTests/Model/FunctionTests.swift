@@ -13,7 +13,7 @@ import Rules
 /**
  Tests standard functions.
  */
-class FunctionsTests: XCTestCase {
+class FunctionTests: XCTestCase {
     
     // MARK: Testing optionals
     
@@ -39,40 +39,30 @@ class FunctionsTests: XCTestCase {
     func testEvalLength() {
         let string = "The quick brown fox jumps over the lazy dog."
         
-        XCTAssertEqual(try Length(string).eval(void), 44)
+        XCTAssertEqual(try Length(string).eval(()), 44)
     }
 
     // Test lowercase function.
     func testEvalLowercase() {
         let string = "MixedCase"
         
-        XCTAssertEqual(try Lowercase(string).eval(void), "mixedcase")
+        XCTAssertEqual(try Lowercase(string).eval(()), "mixedcase")
     }
 
     // Test uppercase function.
     func testEvalUppercase() {
         let string = "MixedCase"
         
-        XCTAssertEqual(try Uppercase(string).eval(void), "MIXEDCASE")
+        XCTAssertEqual(try Uppercase(string).eval(()), "MIXEDCASE")
     }
-}
-
-
-/**
- Standard contexts.
- */
-extension FunctionsTests {
     
-    // When we do not really need a context.
-    var void: Void { () }
-
 }
 
 
 /**
  Standard functions.
  */
-extension FunctionsTests {
+extension FunctionTests {
     
     typealias IfNil = Functions.IfNil
     typealias Length = Functions.Length
@@ -85,7 +75,7 @@ extension FunctionsTests {
 /**
  Test suite.
  */
-extension FunctionsTests {
+extension FunctionTests {
     
     static var allTests = [
         ("testEvalIfNil", testEvalIfNil),
