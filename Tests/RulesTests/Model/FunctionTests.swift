@@ -22,7 +22,7 @@ class FunctionTests: XCTestCase {
         let context: String? = nil
         let keyPath = \String?.self
         
-        XCTAssertEqual(try IfNil(keyPath, "Default string").eval(context), "Default string")
+        XCTAssertEqual(try IfNil(keyPath, "Default string").eval(in: context), "Default string")
     }
 
     // Test value for expression evaluating to a non-nil value.
@@ -30,7 +30,7 @@ class FunctionTests: XCTestCase {
         let context: String? = "String context"
         let keyPath = \String?.self
         
-        XCTAssertEqual(try IfNil(keyPath, "Default string").eval(context), "String context")
+        XCTAssertEqual(try IfNil(keyPath, "Default string").eval(in: context), "String context")
     }
 
     // MARK: Testing strings
@@ -39,21 +39,21 @@ class FunctionTests: XCTestCase {
     func testEvalLength() {
         let string = "The quick brown fox jumps over the lazy dog."
         
-        XCTAssertEqual(try Length(string).eval(()), 44)
+        XCTAssertEqual(try Length(string).eval(in: ()), 44)
     }
 
     // Test lowercase function.
     func testEvalLowercase() {
         let string = "MixedCase"
         
-        XCTAssertEqual(try Lowercase(string).eval(()), "mixedcase")
+        XCTAssertEqual(try Lowercase(string).eval(in: ()), "mixedcase")
     }
 
     // Test uppercase function.
     func testEvalUppercase() {
         let string = "MixedCase"
-        
-        XCTAssertEqual(try Uppercase(string).eval(()), "MIXEDCASE")
+
+        XCTAssertEqual(try Uppercase(string).eval(in: ()), "MIXEDCASE")
     }
     
 }
@@ -64,10 +64,10 @@ class FunctionTests: XCTestCase {
  */
 extension FunctionTests {
     
-    typealias IfNil = Functions.IfNil
-    typealias Length = Functions.Length
-    typealias Lowercase = Functions.Lowercase
-    typealias Uppercase = Functions.Uppercase
+    typealias IfNil = Function.IfNil
+    typealias Length = Function.Length
+    typealias Lowercase = Function.Lowercase
+    typealias Uppercase = Function.Uppercase
 
 }
 

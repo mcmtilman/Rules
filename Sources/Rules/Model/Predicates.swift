@@ -7,10 +7,12 @@
 //  Licensed under Apache License v2.0.
 //
 
+import Foundation
+
 /**
  Predicates.
  */
-public enum Predicates {
+public enum Predicate {
 
     // MARK: Logical predicates
     
@@ -19,8 +21,8 @@ public enum Predicates {
 
         /// Returns the AND combination of the evaluated operands.
         /// Operands are evaluated left to right when needed (shortcut evaluation).
-        public func eval<C>(_ context: C) throws -> Bool {
-            try lhs.eval(context) && rhs.eval(context)
+        public func eval<C>(in context: C) throws -> Bool {
+            try lhs.eval(in: context) && rhs.eval(in: context)
         }
 
     }
@@ -30,8 +32,8 @@ public enum Predicates {
 
         /// Returns the OR combination of the evaluated operands.
         /// Operands are evaluated left to right when needed (shortcut evaluation).
-        public func eval<C>(_ context: C) throws -> Bool {
-            try lhs.eval(context) || rhs.eval(context)
+        public func eval<C>(in context: C) throws -> Bool {
+            try lhs.eval(in: context) || rhs.eval(in: context)
         }
 
     }
@@ -40,139 +42,153 @@ public enum Predicates {
     public final class Not<A: Expression>: UnaryOperation<A> where A.Eval == Bool {
 
         /// Returns the negation of the evaluated operand.
-        public func eval<C>(_ context: C) throws -> Bool {
-            try !operand.eval(context)
+        public func eval<C>(in context: C) throws -> Bool {
+            try !operand.eval(in: context)
         }
 
     }
     
-    // MARK: Comparison predicates
-
-    /// Compares ( `==` ) the evaluation results of two operands.
-    /// The operands evaluate to the same comparable type.
-    public final class Equal<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval: Comparable, A.Eval == B.Eval {
-
-        /// Returns true if the evaluation results of two operands are equal, false otherwise.
-        public func eval<C>(_ context: C) throws -> Bool {
-            try lhs.eval(context) == rhs.eval(context)
-        }
-
-    }
-
-    /// Compares ( `!=` ) the evaluation results of two operands.
-    /// The operands evaluate to the same comparable type.
-    public final class NotEqual<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval: Comparable, A.Eval == B.Eval {
-
-        /// Returns true if the evaluation results of two operands are not equal, false otherwise.
-        public func eval<C>(_ context: C) throws -> Bool {
-            try lhs.eval(context) != rhs.eval(context)
-        }
-
-    }
-
-    /// Compares ( `>` ) the evaluation results of two operands.
-    /// The operands evaluate to the same comparable type.
-    public final class GreaterThan<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval: Comparable, A.Eval == B.Eval {
-
-        /// Returns true if the left operand evaluation result is strict greater than the right operand evaluation result, false otherwise.
-        public func eval<C>(_ context: C) throws -> Bool {
-            try lhs.eval(context) > rhs.eval(context)
-        }
-
-    }
-
-    /// Compares ( `>=` ) the evaluation results of two operands.
-    /// The operands evaluate to the same comparable type.
-    public final class GreaterThanOrEqual<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval: Comparable, A.Eval == B.Eval {
-
-        /// Returns true if the left operand evaluation result is greater than or equal to the right operand evaluation result, false otherwise.
-        public func eval<C>(_ context: C) throws -> Bool {
-            try lhs.eval(context) >= rhs.eval(context)
-        }
-
-    }
-
-    /// Compares ( `<` ) the evaluation results of two operands.
-    /// The operands evaluate to the same comparable type.
-    public final class LessThan<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval: Comparable, A.Eval == B.Eval {
-
-        /// Returns true if the left operand evaluation result is strict less than the right operand evaluation result, false otherwise.
-        public func eval<C>(_ context: C) throws -> Bool {
-            try lhs.eval(context) < rhs.eval(context)
-        }
-
-    }
-
-    /// Compares ( `<=` ) the evaluation results of two operands.
-    /// The operands evaluate to the same comparable type.
-    public final class LessThanOrEqual<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval: Comparable, A.Eval == B.Eval {
-
-        /// Returns true if the left operand evaluation result is less than or equal to the right operand evaluation result, false otherwise.
-        public func eval<C>(_ context: C) throws -> Bool {
-            try lhs.eval(context) <= rhs.eval(context)
-        }
-
-    }
-
-
     // MARK: Collection predicates
 
     public final class Contains<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval: Collection, A.Eval.Element == B.Eval, B.Eval: Hashable {
 
-        public func eval<C>(_ context: C) throws -> Bool {
-            print(try lhs.eval(context), try rhs.eval(context))
-            return try lhs.eval(context).contains(try rhs.eval(context))
+        public func eval<C>(in context: C) throws -> Bool {
+            return try lhs.eval(in: context).contains(try rhs.eval(in: context))
         }
 
     }
 
     public final class ContainsAll<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval: Collection, B.Eval: Collection, A.Eval.Element == B.Eval.Element, A.Eval.Element: Hashable {
 
-        public func eval<C>(_ context: C) throws -> Bool {
-            try Set(lhs.eval(context)).isSuperset(of: try rhs.eval(context))
+        public func eval<C>(in context: C) throws -> Bool {
+            try Set(lhs.eval(in: context)).isSuperset(of: try rhs.eval(in: context))
         }
 
     }
 
     public final class ContainsAny<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval: Collection, B.Eval: Collection, A.Eval.Element == B.Eval.Element, A.Eval.Element: Hashable {
 
-        public func eval<C>(_ context: C) throws -> Bool {
-            try !Set(lhs.eval(context)).isDisjoint(with: try rhs.eval(context))
+        public func eval<C>(in context: C) throws -> Bool {
+            try !Set(lhs.eval(in: context)).isDisjoint(with: try rhs.eval(in: context))
         }
 
     }
 
     public final class ContainsNone<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval: Collection, B.Eval: Collection, A.Eval.Element == B.Eval.Element, A.Eval.Element: Hashable {
 
-        public func eval<C>(_ context: C) throws -> Bool {
-            try Set(lhs.eval(context)).isDisjoint(with: try rhs.eval(context))
+        public func eval<C>(in context: C) throws -> Bool {
+            try Set(lhs.eval(in: context)).isDisjoint(with: try rhs.eval(in: context))
         }
 
     }
 
-    public final class Empty<A: Expression>: UnaryOperation<A> where A.Eval: Collection {
+    public final class IsEmpty<A: Expression>: UnaryOperation<A> where A.Eval: Collection {
 
-        public func eval<C>(_ context: C) throws -> Bool {
-            try operand.eval(context).isEmpty
+        public func eval<C>(in context: C) throws -> Bool {
+            try operand.eval(in: context).isEmpty
         }
 
     }
 
+    // MARK: Comparison predicates
+
+    /// Compares ( `==` ) the evaluation results of two operands.
+    /// The operands evaluate to the same comparable type.
+    public final class IsEqual<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval: Comparable, A.Eval == B.Eval {
+
+        /// Returns true if the evaluation results of two operands are equal, false otherwise.
+        public func eval<C>(in context: C) throws -> Bool {
+            try lhs.eval(in: context) == rhs.eval(in: context)
+        }
+
+    }
+
+    /// Compares ( `!=` ) the evaluation results of two operands.
+    /// The operands evaluate to the same comparable type.
+    public final class IsNotEqual<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval: Comparable, A.Eval == B.Eval {
+
+        /// Returns true if the evaluation results of two operands are not equal, false otherwise.
+        public func eval<C>(in context: C) throws -> Bool {
+            try lhs.eval(in: context) != rhs.eval(in: context)
+        }
+
+    }
+
+    /// Compares ( `>` ) the evaluation results of two operands.
+    /// The operands evaluate to the same comparable type.
+    public final class IsGreaterThan<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval: Comparable, A.Eval == B.Eval {
+
+        /// Returns true if the left operand evaluation result is strict greater than the right operand evaluation result, false otherwise.
+        public func eval<C>(in context: C) throws -> Bool {
+            try lhs.eval(in: context) > rhs.eval(in: context)
+        }
+
+    }
+
+    /// Compares ( `>=` ) the evaluation results of two operands.
+    /// The operands evaluate to the same comparable type.
+    public final class IsGreaterThanOrEqual<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval: Comparable, A.Eval == B.Eval {
+
+        /// Returns true if the left operand evaluation result is greater than or equal to the right operand evaluation result, false otherwise.
+        public func eval<C>(in context: C) throws -> Bool {
+            try lhs.eval(in: context) >= rhs.eval(in: context)
+        }
+
+    }
+
+    /// Compares ( `<` ) the evaluation results of two operands.
+    /// The operands evaluate to the same comparable type.
+    public final class IsLessThan<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval: Comparable, A.Eval == B.Eval {
+
+        /// Returns true if the left operand evaluation result is strict less than the right operand evaluation result, false otherwise.
+        public func eval<C>(in context: C) throws -> Bool {
+            try lhs.eval(in: context) < rhs.eval(in: context)
+        }
+
+    }
+
+    /// Compares ( `<=` ) the evaluation results of two operands.
+    /// The operands evaluate to the same comparable type.
+    public final class IsLessThanOrEqual<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval: Comparable, A.Eval == B.Eval {
+
+        /// Returns true if the left operand evaluation result is less than or equal to the right operand evaluation result, false otherwise.
+        public func eval<C>(in context: C) throws -> Bool {
+            try lhs.eval(in: context) <= rhs.eval(in: context)
+        }
+
+    }
 
     // MARK: String predicates
 
-    public final class EndsWith<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval == String, B.Eval == String {
+    /// Both operands evaluate to strings.
+    /// Tests if the left string is a prefix of the right string.
+    public final class IsPrefix<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval == String, B.Eval == String {
 
-        public func eval<C>(_ context: C) throws -> Bool {
-            try lhs.eval(context).hasSuffix(try rhs.eval(context))
+        /// Returns true if the left string is a prefix of the right string, false otherwise.
+        public func eval<C>(in context: C) throws -> Bool {
+            try rhs.eval(in: context).hasPrefix(try lhs.eval(in: context))
         }
 
     }
 
-    public final class StartsWith<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval == String, B.Eval == String {
+    /// Both operands evaluate to strings.
+    /// Tests if the left string is a substring of the right string.
+    public final class IsSubstring<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval == String, B.Eval == String {
 
-        public func eval<C>(_ context: C) throws -> Bool {
-            try lhs.eval(context).hasPrefix(try rhs.eval(context))
+        /// Returns true if the left string is a substring of the right string, false otherwise.
+        public func eval<C>(in context: C) throws -> Bool {
+            try rhs.eval(in: context).contains(try lhs.eval(in: context))
+        }
+
+    }
+
+    /// Both operands evaluate to strings.
+    /// Tests if the left string is a suffix of the right string.
+    public final class IsSuffix<A: Expression, B: Expression>: BinaryOperation<A, B> where A.Eval == String, B.Eval == String {
+
+        /// Returns true if the right string is a suffix of the left string, false otherwise.
+        public func eval<C>(in context: C) throws -> Bool {
+            try rhs.eval(in: context).hasSuffix(try lhs.eval(in: context))
         }
 
     }
@@ -181,8 +197,8 @@ public enum Predicates {
     
     public final class IsNil<A: Expression, B>: UnaryOperation<A> where A.Eval == Optional<B> {
         
-        public func eval<C>(_ context: C) throws -> Bool {
-            try operand.eval(context) == nil
+        public func eval<C>(in context: C) throws -> Bool {
+            try operand.eval(in: context) == nil
         }
 
     }

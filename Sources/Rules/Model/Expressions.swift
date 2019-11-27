@@ -19,7 +19,7 @@ public protocol Expression {
     associatedtype Eval
     
     /// Evaluates the expression in given context and returns the result.
-    func eval<C>(_ context: C) throws -> Eval
+    func eval<C>(in context: C) throws -> Eval
     
 }
 
@@ -30,7 +30,7 @@ public protocol Expression {
 public extension Expression {
     
     /// By default an expression evaluates to self.
-    func eval<C>(_ context: C) throws -> Self {
+    func eval<C>(in context: C) throws -> Self {
         self
     }
 
@@ -63,8 +63,8 @@ extension String: Expression {}
 extension Array: Expression where Element: Expression {
    
     /// Evaluation returns an array consisting of the evaluations of all the elements.
-    public func eval<C>(_ context: C) throws -> [Element.Eval] {
-        try map { try $0.eval(context) }
+    public func eval<C>(in context: C) throws -> [Element.Eval] {
+        try map { try $0.eval(in: context) }
     }
    
 }
@@ -78,7 +78,7 @@ extension KeyPath: Expression {
     /// Returns the value of the key path from given root context.
     /// Conformance of the context type with the keypath's root type is  checked  at run-time.
     /// Failure to comply results in an *invalidContext* error.
-    public func eval<C>(_ context: C) throws -> Value {
+    public func eval<C>(in context: C) throws -> Value {
          guard let root = context as? Root else { throw EvalError.invalidContext(message: "Context of type \(Root.self) expected") }
 
          return root[keyPath: self]

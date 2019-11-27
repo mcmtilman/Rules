@@ -10,7 +10,7 @@
 /**
  Functions used in predicates.
  */
-public enum Functions {
+public enum Function {
 
     // MARK: Optional value functions
 
@@ -18,8 +18,8 @@ public enum Functions {
     public final class IfNil<A: Expression, B>: BinaryOperation<A, B> where A.Eval == Optional<B> {
 
         /// Returns the evaluation of the expression, unless it is nil, in which case the default value is returned.
-        public func eval<C>(_ context: C) throws -> B {
-            try lhs.eval(context) ?? rhs
+        public func eval<C>(in context: C) throws -> B {
+            try lhs.eval(in: context) ?? rhs
         }
 
     }
@@ -30,8 +30,8 @@ public enum Functions {
     public final class Length<A: Expression>: UnaryOperation<A> where A.Eval == String {
 
         /// Returns the length of the evaluation result.
-        public func eval<C>(_ context: C) throws -> Int {
-            try operand.eval(context).count
+        public func eval<C>(in context: C) throws -> Int {
+            try operand.eval(in: context).count
         }
 
     }
@@ -40,8 +40,8 @@ public enum Functions {
     public final class Lowercase<A: Expression>: UnaryOperation<A> where A.Eval == String {
 
         /// Returns the lowercased evaluation result.
-        public func eval<C>(_ context: C) throws -> String {
-            try operand.eval(context).lowercased()
+        public func eval<C>(in context: C) throws -> String {
+            try operand.eval(in: context).lowercased()
         }
 
     }
@@ -50,8 +50,8 @@ public enum Functions {
     public final class Uppercase<A: Expression>: UnaryOperation<A> where A.Eval == String {
 
         /// Returns the uppercased evaluation result.
-        public func eval<C>(_ context: C) throws -> String {
-            try operand.eval(context).uppercased()
+        public func eval<C>(in context: C) throws -> String {
+            try operand.eval(in: context).uppercased()
         }
 
     }

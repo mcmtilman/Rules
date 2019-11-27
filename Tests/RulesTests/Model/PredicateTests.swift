@@ -10,7 +10,6 @@
 import XCTest
 import Rules
 
-
 /**
  Tests standard predicates.
  */
@@ -20,8 +19,8 @@ class PredicateTests: XCTestCase {
     func testEvalIsNil() {
         let context: String? = nil
         let keyPath = \String?.self
-
-        XCTAssertTrue(try IsNil(keyPath).eval(context))
+        
+        XCTAssertTrue(try IsNil(keyPath).eval(in: context))
     }
 
     // Test if we can detect non-nil values.
@@ -29,9 +28,24 @@ class PredicateTests: XCTestCase {
         let context: String? = "String context"
         let keyPath = \String?.self
 
-        XCTAssertFalse(try IsNil(keyPath).eval(context))
+        XCTAssertFalse(try IsNil(keyPath).eval(in: context))
     }
 
+    // Test if we can find a substring.
+    func testEvalIsSubstring() {
+        let substring = "cd"
+        let string = "abcdef"
+
+        XCTAssertTrue(try IsSubstring(substring, string).eval(in: ()))
+    }
+
+    // Test if we cannot find a substring.
+    func testEvalIsNotSubstring() {
+        let substring = "dc"
+        let string = "abcdef"
+ 
+        XCTAssertFalse(try IsSubstring(substring, string).eval(in: ()))
+    }
 }
 
 
@@ -40,7 +54,8 @@ class PredicateTests: XCTestCase {
  */
 extension PredicateTests {
     
-    typealias IsNil = Predicates.IsNil
+    typealias IsSubstring = Predicate.IsSubstring
+    typealias IsNil = Predicate.IsNil
 
 }
 
@@ -53,6 +68,8 @@ extension PredicateTests {
     static var allTests = [
         ("testEvalIsNil", testEvalIsNil),
         ("testEvalIsNotNil", testEvalIsNotNil),
+        ("testEvalIsSubstring", testEvalIsSubstring),
+        ("testEvalIsNotSubstring", testEvalIsNotSubstring),
     ]
 
 }
