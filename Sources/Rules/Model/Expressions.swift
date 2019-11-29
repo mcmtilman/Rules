@@ -7,7 +7,6 @@
 //  Licensed under Apache License v2.0.
 //
 
-
 /**
  Expressions are the building blocks of rules.
  */
@@ -85,38 +84,3 @@ extension KeyPath: Expression {
      }
 
  }
-
-
-/**
- 'Abstract' superclass representing state and initialization of operations involving one operand.
- Unary operations can be used as expressions.
- */
-open class UnaryOperation<A>: Expression {
-    
-    /// The single operand.
-    public let operand: A
-    
-    /// Initializes the operand.
-    public init(_ operand: A) {
-        self.operand = operand
-    }
-    
-}
-
-
-/**
- 'Abstract' superclass representing state and initialization of operations involving two operands.
- Binary operations can be used as expressions.
- */
-open class BinaryOperation<A, B>: Expression {
-    
-    /// Left- and right-hand-side operands.
-    public let lhs: A, rhs: B
-    
-    /// Initializes the left- and right-hand-side operands.
-    public init(_ lhs: A, _ rhs: B) {
-        self.lhs = lhs
-        self.rhs = rhs
-    }
-    
-}
