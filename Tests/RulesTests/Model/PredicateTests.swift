@@ -15,6 +15,20 @@ import Rules
  */
 class PredicateTests: XCTestCase {
     
+    // MARK: Testing collections
+    
+    // Test if a collection contains an element.
+    func testEvalContains() {
+        XCTAssertFalse(try Contains([Int](), 1).eval(in: ()))
+        XCTAssertTrue(try Contains([1, 2], 1).eval(in: ()))
+    }
+
+    // Test if a collection does not contain an element.
+    func testEvalContainsNot() {
+        XCTAssertTrue(try ContainsNot([Int](), 1).eval(in: ()))
+        XCTAssertFalse(try ContainsNot([1, 2], 1).eval(in: ()))
+    }
+
     // Test if a collection is empty.
     func testEvalIsEmpty() {
         XCTAssertTrue(try IsEmpty([Int]()).eval(in: ()))
@@ -33,6 +47,8 @@ class PredicateTests: XCTestCase {
         XCTAssertTrue(try IsNotEmpty("not empty").eval(in: ()))
     }
 
+    // MARK: Testing optionals
+    
     // Test if a value is nil.
     func testEvalIsNil() {
         let keyPath = \String?.self
@@ -49,6 +65,8 @@ class PredicateTests: XCTestCase {
         XCTAssertTrue(try IsNotNil(keyPath).eval(in: "not nil"))
     }
 
+    // MARK: Testing strings
+    
     // Test if we can find a prefix string.
     func testEvalIsPrefix() {
         let string = "abcdef"
@@ -81,6 +99,8 @@ class PredicateTests: XCTestCase {
  */
 extension PredicateTests {
     
+    typealias Contains = Predicate.Contains
+    typealias ContainsNot = Predicate.ContainsNot
     typealias IsEmpty = Predicate.IsEmpty
     typealias IsNotEmpty = Predicate.IsNotEmpty
     typealias IsNil = Predicate.IsNil
@@ -98,6 +118,8 @@ extension PredicateTests {
 extension PredicateTests {
     
     static var allTests = [
+        ("testEvalContains", testEvalContains),
+        ("testEvalContainsNot", testEvalContainsNot),
         ("testEvalIsEmpty", testEvalIsEmpty),
         ("testEvalIsNotEmpty", testEvalIsNotEmpty),
         ("testEvalIsNil", testEvalIsNil),
