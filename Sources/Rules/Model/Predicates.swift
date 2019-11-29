@@ -16,7 +16,8 @@ public enum Predicate {
 
     // MARK: Logical predicates
     
-    /// Binary AND operation. The operands evaluate to a boolean value
+    /// Binary AND operation.
+    /// The operands evaluate to a boolean value
     public final class And<A: Expression, B: Expression>: BinaryOperation<A, B>, Expression where A.Eval == Bool, B.Eval == Bool {
 
         /// Returns the AND combination of the evaluated operands.
@@ -27,7 +28,8 @@ public enum Predicate {
 
     }
 
-    /// Binary OR operation. The operands must evaluate to a boolean value.
+    /// Binary OR operation.
+    /// The operands must evaluate to a boolean value.
     public final class Or<A: Expression, B: Expression>: BinaryOperation<A, B>, Expression where A.Eval == Bool, B.Eval == Bool {
 
         /// Returns the OR combination of the evaluated operands.
@@ -38,7 +40,8 @@ public enum Predicate {
 
     }
     
-    /// Unary NOT operation. The operand must evaluate to a boolean value.
+    /// Unary NOT operation.
+    /// The operand must evaluate to a boolean value.
     public final class Not<A: Expression>: UnaryOperation<A>, Expression where A.Eval == Bool {
 
         /// Returns the negation of the evaluated operand.
@@ -176,8 +179,9 @@ public enum Predicate {
 
     // MARK: String predicates
 
-    /// Both operands evaluate to strings.
+
     /// Tests if the left string is a prefix of the right string.
+    /// Both operands must evaluate to strings.
     public final class IsPrefix<A: Expression, B: Expression>: BinaryOperation<A, B>, Expression where A.Eval == String, B.Eval == String {
 
         /// Returns true if the left string is a prefix of the right string, false otherwise.
@@ -187,8 +191,8 @@ public enum Predicate {
 
     }
 
-    /// Both operands evaluate to strings.
     /// Tests if the left string is a substring of the right string.
+    /// Both operands must evaluate to strings.
     public final class IsSubstring<A: Expression, B: Expression>: BinaryOperation<A, B>, Expression where A.Eval == String, B.Eval == String {
 
         /// Returns true if the left string is a substring of the right string, false otherwise.
@@ -198,8 +202,8 @@ public enum Predicate {
 
     }
 
-    /// Both operands evaluate to strings.
     /// Tests if the left string is a suffix of the right string.
+    /// Both operands must evaluate to strings.
     public final class IsSuffix<A: Expression, B: Expression>: BinaryOperation<A, B>, Expression where A.Eval == String, B.Eval == String {
 
         /// Returns true if the right string is a suffix of the left string, false otherwise.
@@ -211,16 +215,22 @@ public enum Predicate {
 
     // MARK: Optional predicates
     
+    /// Tests if the operand is nil.
+    /// The operand must evaluate to an optional value.
     public final class IsNil<A: Expression, B>: UnaryOperation<A>, Expression where A.Eval == Optional<B> {
         
+        /// Returns true if the value is nil, false otherwise.
         public func eval<C>(in context: C) throws -> Bool {
             try operand.eval(in: context) == nil
         }
 
     }
 
+    /// Tests if the operand is not nil.
+    /// The operand must evaluate to an optional value.
     public final class IsNotNil<A: Expression, B>: UnaryOperation<A>, Expression where A.Eval == Optional<B> {
         
+        /// Returns true if the value is not nil, false otherwise.
         public func eval<C>(in context: C) throws -> Bool {
             try operand.eval(in: context) != nil
         }
