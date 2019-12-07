@@ -1,5 +1,5 @@
 //
-//  ExpressionsTests.swift
+//  ExpressionTests.swift
 //  Rules
 //
 //  Created by Michel Tilman on 23/11/2019.

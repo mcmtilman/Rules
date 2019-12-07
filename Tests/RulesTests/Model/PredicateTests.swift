@@ -1,5 +1,5 @@
 //
-//  PredicatesTests.swift
+//  PredicateTests.swift
 //  Rules
 //
 //  Created by Michel Tilman on 24/11/2019.
