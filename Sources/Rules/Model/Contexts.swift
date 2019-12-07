@@ -53,8 +53,8 @@
 
  extension Optional: Contextual where Wrapped == Z {
      static let keyPaths: [String: AnyKeyPath] = [
-         "?v": \Wrapped?.?.v,
-         "?w": \Wrapped?.?.w,
+         "?v": \Self.?.v,
+         "?w": \Self.?.w,
      ]
  }
  ```
