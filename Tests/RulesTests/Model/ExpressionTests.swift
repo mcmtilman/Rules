@@ -31,7 +31,7 @@ class ExpressionTests: XCTestCase {
     func testEvalNilContext() {
         let context: String? = nil
         let keyPath = \String.self
-        
+
         XCTAssertThrowsError(try keyPath.eval(in: context)) { error in
             XCTAssertEqual(error as? EvalError, EvalError.invalidContext(message: "Context of type String expected"))
         }

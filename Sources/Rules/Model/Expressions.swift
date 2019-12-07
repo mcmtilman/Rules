@@ -13,6 +13,7 @@
 public protocol Expression {
     
     /// The evaluation result of an expression.
+    ///
     /// If the expression is nested, this type must match the requirements of parent expression.
     /// For instance, an *And* operator expects two Boolean operands: expressions having Eval == Bool.
     associatedtype Eval
@@ -75,6 +76,7 @@ extension Array: Expression where Element: Expression {
 extension KeyPath: Expression {
      
     /// Returns the value of the key path from given root context.
+    ///
     /// Conformance of the context type with the keypath's root type is  checked  at run-time.
     /// Failure to comply results in an *invalidContext* error.
     public func eval<C>(in context: C) throws -> Value {

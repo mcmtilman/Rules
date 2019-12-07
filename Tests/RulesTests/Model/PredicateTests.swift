@@ -33,7 +33,7 @@ class PredicateTests: XCTestCase {
     func testEvalIsEmpty() {
         XCTAssertTrue(try IsEmpty([Int]()).eval(in: ()))
         XCTAssertFalse(try IsEmpty([1, 2]).eval(in: ()))
-        
+
         XCTAssertTrue(try IsEmpty("").eval(in: ()))
         XCTAssertFalse(try IsEmpty("not empty").eval(in: ()))
     }
@@ -99,6 +99,7 @@ class PredicateTests: XCTestCase {
  */
 extension PredicateTests {
     
+    typealias And = Predicate.And
     typealias Contains = Predicate.Contains
     typealias ContainsNot = Predicate.ContainsNot
     typealias IsEmpty = Predicate.IsEmpty
