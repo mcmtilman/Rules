@@ -93,13 +93,13 @@ public extension Contextual {
     /// # Examples
     /// ```
     /// // Construct \X.x
-    /// let keyPath: KeyPath<X, Int> = X.keyPath(for: ["x"]
+    /// let keyPath: KeyPath<X, Int> = X.keyPath(for: ["x"])
     ///
     /// // Construct \X.y.z
-    /// let keyPath: KeyPath<X, Z?> = X.keyPath(for: ["y", "z"]
+    /// let keyPath: KeyPath<X, Z?> = X.keyPath(for: ["y", "z"])
     ///
     /// // Construct \X.y.z?.v
-    /// let keyPath: KeyPath<X, Int?> = X.keyPath(for: ["y", "z", "?v"]
+    /// let keyPath: KeyPath<X, Int?> = X.keyPath(for: ["y", "z", "?v"])
     /// ```
     static func keyPath<V>(for keys: [String]) -> KeyPath<Self, V>? {
         guard !keys.isEmpty else { return nil }
