@@ -68,6 +68,17 @@ class ContextTests: XCTestCase {
         XCTAssertNil(keyPath)
     }
     
+    // Test accessing and evaluating a multi-key path containing an optional value type followed by multiple non-optional value types.
+    // The constructed key path seems to behave as \X.y.z?.zd.a, but is not the same key path. It is not clear if and how \X.y.z?.zd.a
+    // can be constructed programmatically.
+    func testOptionalChaining() {
+        guard let keyPath: KeyPath<X, Int?> = X.keyPath(for: ["y", "z", "zd", "a"]) else { return XCTFail("Nil key path") }
+        let context = X(x: 1, y: Y(y: 3, z: Z(v: 5, w: [1, 2, 3], zd: ZD(a: 10))))
+        
+        XCTAssertEqual(keyPath, (\X.y).appending(path: \Y.z).appending(path: \Z?.?.zd).appending(path: \ZD?.?.a))
+        XCTAssertEqual(context[keyPath: keyPath], 10)
+    }
+
 }
 
 
@@ -103,15 +114,32 @@ fileprivate struct Z: Contextual {
     static let keyPaths: [String: AnyKeyPath] = [
         "v": \Self.v,
         "w": \Self.w,
+        "zd": \Self.zd,
     ]
     
     static let optionalKeyPaths: [String: AnyKeyPath] = [
         "v": \Self?.?.v,
         "w": \Self?.?.w,
+        "zd": \Self?.?.zd,
     ]
 
     let v: Int
     let w: [Int]
+    let zd: ZD
+
+}
+
+fileprivate struct ZD: Contextual {
+    
+    static let keyPaths: [String: AnyKeyPath] = [
+        "a": \Self.a,
+    ]
+    
+    static let optionalKeyPaths: [String: AnyKeyPath] = [
+        "a": \Self?.?.a,
+    ]
+
+    let a: Int
 
 }
 
@@ -129,6 +157,7 @@ extension ContextTests {
         ("testMultiKeyPathEndingWithOptional", testMultiKeyPathEndingWithOptional),
         ("testMultiKeyPathContainingOptional", testMultiKeyPathContainingOptional),
         ("testUnknownMultiKeyPath", testUnknownMultiKeyPath),
+        ("testOptionalChaining", testOptionalChaining),
     ]
 
 }

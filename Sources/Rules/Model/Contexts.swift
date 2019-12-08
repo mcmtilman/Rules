@@ -12,6 +12,12 @@
  
  # Example model
  
+ The following model is extended in multiple ways with *contextual awareness*.
+ * The first extension example provides single-key paths for properties only. Key paths of multiple types
+ may then be combined to build multi-key paths.
+ * The second extension example provides all key paths at the level of the root context, and includes a
+ combination of single- and multi-key paths.
+ 
  ```
  struct X {
      let x: Int
@@ -28,8 +34,9 @@
  }
  ```
  
- # Basic key paths
- All individual property key paths can be accessed.
+ # Single-property paths only
+ 
+ Individual single (property) key paths are available for all types. Multi-key paths must be assembled.
  
  ```
  extension X: Contextual {
@@ -57,9 +64,10 @@
  }
  ```
  
- # Explicit nested key paths
- Only the root context adopts the Contexual protocol.
- Key paths from the root to properties of 'nested'' types are listed explicitly.
+ # Root context key paths only
+ 
+ Only the root context adopts the *Contexual* protocol.
+ Key paths from the root to properties of 'nested'' types restrict acess to specific chains.
 
  ```
  extension X: Contextual {
@@ -98,7 +106,7 @@ public extension Contextual {
         [:]
     }
 
-    // MARK: Constructing key paths
+    // MARK: Combining key paths
     
     /// Returns a combined key path consisting of individual key paths, or nil of not possible.
     ///
@@ -107,7 +115,7 @@ public extension Contextual {
     /// * some keys are not found
     /// * root or value types do not match.
     ///
-    /// # Examples using basic model
+    /// # Examples using single-property paths model
     /// ```
     /// // Construct \X.x
     /// let keyPath: KeyPath<X, Int> = X.keyPath(for: ["x"])
