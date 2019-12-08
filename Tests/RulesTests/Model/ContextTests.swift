@@ -68,10 +68,11 @@ class ContextTests: XCTestCase {
         XCTAssertNil(keyPath)
     }
     
-    // Test accessing and evaluating a multi-key path containing an optional value type followed by multiple non-optional value types.
-    // The constructed key path seems to behave as \X.y.z?.zd.a, but is not the same key path. It is not clear if and how \X.y.z?.zd.a
-    // can be constructed programmatically.
-    func testOptionalChaining() {
+    // Test accessing and evaluating a multi-key path containing an optional property followed by two non-optional properties
+    // as separate key paths, i.e. the two final non-optional properties are appended one at a time.
+    // The constructed key path seems to behave as \X.y.z?.zd.a, but is not the same key path.
+    // It is not clear if and how \X.y.z?.zd.a can be constructed programmatically.
+    func testSimulateOptionalChaining() {
         guard let keyPath: KeyPath<X, Int?> = X.keyPath(for: ["y", "z", "zd", "a"]) else { return XCTFail("Nil key path") }
         let context = X(x: 1, y: Y(y: 3, z: Z(v: 5, w: [1, 2, 3], zd: ZD(a: 10))))
         
@@ -79,6 +80,15 @@ class ContextTests: XCTestCase {
         XCTAssertEqual(keyPath, (\X.y.z?.zd).appending(path: \ZD?.?.a))
         XCTAssertNotEqual(keyPath, \X.y.z?.zd.a)
         XCTAssertEqual(context[keyPath: keyPath], 10)
+    }
+
+    // Test accessing a multi-key path containing an optional property followed by two non-optional properties as one key path,
+    // i.e. the two final non-optional properties are appended in one go.
+    // The constructed key path is the same as \X.y.z?.zd.a.
+    func testOptionalChaining() {
+        guard let keyPath: KeyPath<X, Int?> = X.keyPath(for: ["y", "z", "zda"]) else { return XCTFail("Nil key path") }
+        
+        XCTAssertEqual(keyPath, \X.y.z?.zd.a)
     }
 
 }
@@ -123,6 +133,7 @@ fileprivate struct Z: Contextual {
         "v": \Self?.?.v,
         "w": \Self?.?.w,
         "zd": \Self?.?.zd,
+        "zda": \Self?.?.zd.a,
     ]
 
     let v: Int
@@ -159,6 +170,7 @@ extension ContextTests {
         ("testMultiKeyPathEndingWithOptional", testMultiKeyPathEndingWithOptional),
         ("testMultiKeyPathContainingOptional", testMultiKeyPathContainingOptional),
         ("testUnknownMultiKeyPath", testUnknownMultiKeyPath),
+        ("testSimulateOptionalChaining", testSimulateOptionalChaining),
         ("testOptionalChaining", testOptionalChaining),
     ]
 
