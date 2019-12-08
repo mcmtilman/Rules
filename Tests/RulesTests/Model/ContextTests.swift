@@ -15,49 +15,57 @@ import Rules
  */
 class ContextTests: XCTestCase {
     
-    // MARK: Testing basic key paths
+    // MARK: Testing single-key paths
     
-    // Test accessing and applying an existing basic key path.
-    func testBasicKeyPath() {
-        guard let keyPath = X.keyPaths["x"] as? KeyPath<X, Int> else { return XCTFail("Nil key path") }
-        let context = X(x: 1, y: Y(y: 3, z: Z(v: 5, w: [1, 2, 3])))
+    // Test accessing an existing single-key path with a non-optional value type.
+    func testNonOptionalSingleKeyPath() {
+        guard let keyPath: KeyPath<X, Int> = X.keyPath(for: ["x"]) else { return XCTFail("Nil key path") }
         
         XCTAssertEqual(keyPath, \X.x)
-        XCTAssertEqual(context[keyPath: keyPath], 1)
     }
     
-    // Test accessing a non-existing basic key path.
-    func testNilBasicKeyPath() {
-        let keyPath = X.keyPaths["abc"]
+    // Test accessing an existing single-key path with an optional value type.
+    func testOptionalSingleKeyPath() {
+        guard let keyPath: KeyPath<Z?, Int?> = Z?.keyPath(for: ["v"]) else { return XCTFail("Nil key path") }
+
+        XCTAssertEqual(keyPath, \Z?.?.v)
+    }
+    
+    // Test accessing a non-existing single-key key path.
+    func testUnknownSingleKeyPath() {
+        let keyPath: KeyPath<X, Any>? = X.keyPath(for: ["abc"])
         
         XCTAssertNil(keyPath)
     }
     
-    // Test accessing a existing basic key path for an optional type.
-    func testOptionalBasicKeyPath() {
-        let keyPath = Z?.keyPaths["v"]
-        
-        XCTAssertEqual(keyPath, \Z?.?.v)
-    }
+    // MARK: Testing multi-key paths
     
-    // MARK: Testing constructing non-optional-chaining key paths
-    
-    // Test constructing and applying a key path with basic value type.
-    func testConstructBasicValueKeyPath() {
+    // Test accessing a multi-key path containing no optional value types.
+    func testNonOptionalMultiKeyPath() {
         guard let keyPath: KeyPath<X, Int> = X.keyPath(for: ["y", "y"]) else { return XCTFail("Nil key path") }
-        let context = X(x: 1, y: Y(y: 3, z: Z(v: 5, w: [1, 2, 3])))
         
         XCTAssertEqual(keyPath, \X.y.y)
-        XCTAssertEqual(context[keyPath: keyPath], 3)
     }
     
-    // Test constructing and applying a key path with optional value type.
-    func testConstructOptionalValueKeyPath() {
+    // Test accessing a multi-key path ending with an optional value type.
+    func testMultiKeyPathEndingWithOptional() {
         guard let keyPath: KeyPath<X, Z?> = X.keyPath(for: ["y", "z"]) else { return XCTFail("Nil key path") }
-        let context = X(x: 1, y: Y(y: 3, z: nil))
         
         XCTAssertEqual(keyPath, \X.y.z)
-        XCTAssertNil(context[keyPath: keyPath])
+    }
+    
+    // Test accessing a multi-key path containing an optional value type in the middle.
+    func testMultiKeyPathContainingOptional() {
+        guard let keyPath: KeyPath<X, Int?> = X.keyPath(for: ["y", "z", "v"]) else { return XCTFail("Nil key path") }
+        
+        XCTAssertEqual(keyPath, \X.y.z?.v)
+    }
+
+    // Test accessing a non-existing multi-key key path.
+    func testUnknownMultiKeyPath() {
+        let keyPath: KeyPath<X, Any>? = X.keyPath(for: ["y", "abc"])
+        
+        XCTAssertNil(keyPath)
     }
     
 }
@@ -114,11 +122,13 @@ fileprivate struct Z: Contextual {
 extension ContextTests {
     
     static var allTests = [
-        ("testBasicKeyPath", testBasicKeyPath),
-        ("testNilBasicKeyPath", testNilBasicKeyPath),
-        ("testOptionalBasicKeyPath", testOptionalBasicKeyPath),
-        ("testConstructBasicValueKeyPath", testConstructBasicValueKeyPath),
-        ("testConstructOptionalValueKeyPath", testConstructOptionalValueKeyPath),
+        ("testNonOptionalSingleKeyPath", testNonOptionalSingleKeyPath),
+        ("testOptionalSingleKeyPath", testOptionalSingleKeyPath),
+        ("testUnknownSingleKeyPath", testUnknownSingleKeyPath),
+        ("testNonOptionalMultiKeyPath", testNonOptionalMultiKeyPath),
+        ("testMultiKeyPathEndingWithOptional", testMultiKeyPathEndingWithOptional),
+        ("testMultiKeyPathContainingOptional", testMultiKeyPathContainingOptional),
+        ("testUnknownMultiKeyPath", testUnknownMultiKeyPath),
     ]
 
 }
