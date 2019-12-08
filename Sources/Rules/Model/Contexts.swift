@@ -8,7 +8,12 @@
 //
 
 /**
- Contextual types provide explicit enumerations of  key paths, typically keyed by property name.
+ Contextual types provide explicit enumerations of supported key paths, keyed by name.
+ The names may correspond to individual properties, but they may also represent
+ more complex key paths.
+ 
+ Types adopting the *Contextual* protocol may register key paths for both the types themselves
+ and when used as optionals.
  
  # Example model
  

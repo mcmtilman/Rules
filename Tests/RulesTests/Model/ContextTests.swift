@@ -75,7 +75,8 @@ class ContextTests: XCTestCase {
         guard let keyPath: KeyPath<X, Int?> = X.keyPath(for: ["y", "z", "zd", "a"]) else { return XCTFail("Nil key path") }
         let context = X(x: 1, y: Y(y: 3, z: Z(v: 5, w: [1, 2, 3], zd: ZD(a: 10))))
         
-        XCTAssertEqual(keyPath, (\X.y).appending(path: \Y.z).appending(path: \Z?.?.zd).appending(path: \ZD?.?.a))
+        XCTAssertEqual(keyPath, (\X.y.z).appending(path: \Z?.?.zd).appending(path: \ZD?.?.a))
+        XCTAssertEqual(keyPath, (\X.y.z?.zd).appending(path: \ZD?.?.a))
         XCTAssertEqual(context[keyPath: keyPath], 10)
     }
 
