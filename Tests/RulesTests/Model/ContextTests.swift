@@ -77,6 +77,7 @@ class ContextTests: XCTestCase {
         
         XCTAssertEqual(keyPath, (\X.y.z).appending(path: \Z?.?.zd).appending(path: \ZD?.?.a))
         XCTAssertEqual(keyPath, (\X.y.z?.zd).appending(path: \ZD?.?.a))
+        XCTAssertNotEqual(keyPath, \X.y.z?.zd.a)
         XCTAssertEqual(context[keyPath: keyPath], 10)
     }
 
