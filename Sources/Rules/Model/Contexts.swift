@@ -85,12 +85,18 @@
 */
 public protocol Contextual {
     
-    /// Returns a dictionary of key paths.
+    /// Returns a dictionary of registered key paths.
     static var keyPaths: [String: AnyKeyPath] { get }
 
-    /// Returns a dictionary of key paths for the optional type.
+    /// Returns a dictionary of registered optional type key paths.
     static var optionalKeyPaths: [String: AnyKeyPath] { get }
 
+    /// Returns a known key path for given key, or nil if not found
+    static func keyPath(for key: String) -> AnyKeyPath?
+    
+    /// Returns a known optional type key path for given key, or nil if not found
+    static func optionalKeyPath(for key: String) -> AnyKeyPath?
+    
 }
 
 
@@ -106,14 +112,29 @@ public extension Contextual {
         [:]
     }
 
-    /// Returns an empty dictionary of key paths for the optional type by default.
+    /// Returns an empty dictionary of optional type key paths by default.
     static var optionalKeyPaths: [String: AnyKeyPath] {
         [:]
     }
 
+    // MARK: Accessing known key paths
+    
+    /// Returns a known key path for given key, or nil if not found
+    /// By default this is a registered key path.
+    static func keyPath(for key: String) -> AnyKeyPath? {
+        keyPaths[key]
+    }
+
+    /// Returns a known optional type key path for given key, or nil if not found
+    /// By default this is a registered optional type key path.
+    static func optionalKeyPath(for key: String) -> AnyKeyPath? {
+        optionalKeyPaths[key]
+    }
+
     // MARK: Combining key paths
     
-    /// Returns a combined key path consisting of individual key paths, or nil of not possible.
+    /// Returns a combined key path consisting of known key paths, or nil of not possible.
+    /// Generic parameter V denotes the expected value type of the key path.
     ///
     /// Construction fails if:
     /// * the list of keys is empty
@@ -135,7 +156,7 @@ public extension Contextual {
         guard !keys.isEmpty else { return nil }
         
         let keyPath: PartialKeyPath<Self>? = keys.reduce(\.self) { path, key in
-            path.flatMap { (type(of: $0).valueType as? Contextual.Type)?.keyPaths[key].flatMap($0.appending) }
+            path.flatMap { (type(of: $0).valueType as? Contextual.Type)?.keyPath(for: key).flatMap($0.appending) }
         }
         
         return keyPath as? KeyPath<Self, V>
@@ -144,13 +165,33 @@ public extension Contextual {
 }
 
 /**
- Optional types delegate requests for their key paths to the wrapped types.
+ Optional types delegate requests for their key paths to their wrapped types.
  */
 extension Optional: Contextual where Wrapped: Contextual {
     
-    /// Returns the optional key paths defined by the wrapped type.
-    public static var keyPaths: [String: AnyKeyPath] {
-        Wrapped.optionalKeyPaths
+    /// Returns the optional type key path defined by the wrapped type.
+     public static func keyPath(for key: String) -> AnyKeyPath? {
+        Wrapped.optionalKeyPath(for: key)
+    }
+
+}
+
+
+/**
+ Optional types delegate requests for their key paths to their wrapped types.
+ */
+extension Dictionary: Contextual where Key == String {
+    
+    /// Returns a key path for given dictionary key.
+    /// The key may not exist.
+    public static func keyPath(for key: String) -> AnyKeyPath? {
+        \Self[key]
+    }
+
+    /// Returns a optional key path for given dictionary key.
+    /// The key may not exist.
+    public static func optionalKeyPath(for key: String) -> AnyKeyPath? {
+        \Self?.?[key]
     }
 
 }
