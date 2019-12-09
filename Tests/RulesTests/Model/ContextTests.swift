@@ -54,6 +54,13 @@ class ContextTests: XCTestCase {
     
     // MARK: Testing constructing key paths
     
+    // Test if 'constructing' a known key path is similar as directly accessing the key path.
+    func testConstructKnownKeyPath() {
+        guard let keyPath: KeyPath<X, Int> = X.keyPath(for: ["x"]) else { return XCTFail("Nil key path") }
+
+        XCTAssertEqual(keyPath, X.keyPath(for: "x"))
+    }
+    
     // Test constructing a key path for a nested non-optional property.
     func testConstructNonOptionalKeyPath() {
         guard let keyPath: KeyPath<X, Int> = X.keyPath(for: ["y", "y"]) else { return XCTFail("Nil key path") }
@@ -199,6 +206,7 @@ extension ContextTests {
         ("testUnknownKeyPath", testUnknownKeyPath),
         ("testKnownDictionaryKeyPath", testKnownDictionaryKeyPath),
         ("testKnownOptionalDictionaryKeyPath", testKnownOptionalDictionaryKeyPath),
+        ("testConstructKnownKeyPath", testConstructKnownKeyPath),
         ("testConstructNonOptionalKeyPath", testConstructNonOptionalKeyPath),
         ("testConstructKeyPathEndingWithOptional", testConstructKeyPathEndingWithOptional),
         ("testConstructKeyPathContainingOptional", testConstructKeyPathContainingOptional),
