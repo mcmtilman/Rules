@@ -103,12 +103,14 @@ class ContextTests: XCTestCase {
     // It is not clear if and how \X.y.z?.zd.a can be constructed programmatically.
     func testSimulateOptionalChaining() {
         guard let keyPath: KeyPath<X, Int?> = X.keyPath(for: ["y", "z", "zd", "a"]) else { return XCTFail("Nil key path") }
-        let context = X(x: 1, y: Y(y: 3, z: Z(v: 5, w: [1, 2, 3], zd: ZD(a: 10)), d: [:], e: [:]))
-        
+        let fullContext = X(x: 1, y: Y(y: 3, z: Z(v: 5, w: [1, 2, 3], zd: ZD(a: 10)), d: [:], e: [:]))
+        let partialContext = X(x: 1, y: Y(y: 3, z: nil, d: [:], e: [:]))
+
         XCTAssertEqual(keyPath, (\X.y.z).appending(path: \Z?.?.zd).appending(path: \ZD?.?.a))
         XCTAssertEqual(keyPath, (\X.y.z?.zd).appending(path: \ZD?.?.a))
         XCTAssertNotEqual(keyPath, \X.y.z?.zd.a)
-        XCTAssertEqual(context[keyPath: keyPath], 10)
+        XCTAssertEqual(fullContext[keyPath: keyPath], 10)
+        XCTAssertNil(partialContext[keyPath: keyPath])
     }
 
     // Test constructing a key path for a key in a nested dictionary.

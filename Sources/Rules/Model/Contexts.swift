@@ -178,7 +178,7 @@ extension Optional: Contextual where Wrapped: Contextual {
 
 
 /**
- Optional types delegate requests for their key paths to their wrapped types.
+ Dictionaries support dynamic creation of a key path given a dictionary key.
  */
 extension Dictionary: Contextual where Key == String {
     
