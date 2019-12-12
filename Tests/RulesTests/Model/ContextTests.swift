@@ -15,6 +15,22 @@ import Rules
  */
 class ContextTests: XCTestCase {
     
+    // MARK: Testing failable array subscripts
+    
+    func testInRangeArrayKeyPath() {
+        let keyPath = \[Int][failable: 1]
+        let context = [1, 2]
+        
+        XCTAssertEqual(context[keyPath: keyPath], 2)
+    }
+    
+    func testOutOfRangeArrayKeyPath() {
+        let keyPath = \[Int][failable: 2]
+        let context = [1, 2]
+        
+        XCTAssertNil(context[keyPath: keyPath])
+    }
+    
     // MARK: Testing known paths
     
     // Test accessing a known key path with non-optional value type.
@@ -38,6 +54,24 @@ class ContextTests: XCTestCase {
         XCTAssertNil(keyPath)
     }
     
+    // MARK: Testing known array paths
+
+    // Test accessing a known key path for an array.
+    func testKnownArrayKeyPath() {
+        guard let keyPath = [Int].keyPath(for: "1") else { return XCTFail("Nil key path") }
+        
+        XCTAssertEqual(keyPath, \[Int][failable: 1])
+    }
+    
+    // Test accessing a unknown key path for an array.
+    func testUnknownArrayKeyPath() {
+        let keyPath = [Int].keyPath(for: "abc")
+        
+        XCTAssertNil(keyPath)
+    }
+    
+    // MARK: Testing known dictionary paths
+
     // Test accessing a known key path for a dictionary.
     func testKnownDictionaryKeyPath() {
         guard let keyPath = [String: Int].keyPath(for: "a") else { return XCTFail("Nil key path") }
@@ -103,8 +137,8 @@ class ContextTests: XCTestCase {
     // It is not clear if and how \X.y.z?.zd.a can be constructed programmatically.
     func testSimulateOptionalChaining() {
         guard let keyPath: KeyPath<X, Int?> = X.keyPath(for: ["y", "z", "zd", "a"]) else { return XCTFail("Nil key path") }
-        let fullContext = X(x: 1, y: Y(y: 3, z: Z(v: 5, w: [1, 2, 3], zd: ZD(a: 10)), d: [:], e: [:]))
-        let partialContext = X(x: 1, y: Y(y: 3, z: nil, d: [:], e: [:]))
+        let fullContext = X(x: 1, y: Y(y: 3, z: Z(v: 5, w: [1, 2, 3], zd: ZD(a: 10)), d: [:], e: [:], f:[], g:[]))
+        let partialContext = X(x: 1, y: Y(y: 3, z: nil, d: [:], e: [:], f:[], g:[]))
 
         XCTAssertEqual(keyPath, (\X.y.z).appending(path: \Z?.?.zd).appending(path: \ZD?.?.a))
         XCTAssertEqual(keyPath, (\X.y.z?.zd).appending(path: \ZD?.?.a))
@@ -127,6 +161,20 @@ class ContextTests: XCTestCase {
         XCTAssertEqual(keyPath, \X.y.e?["a"])
     }
 
+    // Test constructing a key path for an index in a nested array.
+    func testConstructArrayKeyPath() {
+        guard let keyPath: KeyPath<X, Int?> = X.keyPath(for: ["y", "f", "0"]) else { return XCTFail("Nil key path") }
+        
+        XCTAssertEqual(keyPath, \X.y.f[failable: 0])
+    }
+
+    // Test constructing a key path for an index in a nested optional array.
+    func testConstructOptionalArrayKeyPath() {
+        guard let keyPath: KeyPath<X, Int?> = X.keyPath(for: ["y", "g", "0"]) else { return XCTFail("Nil key path") }
+        
+        XCTAssertEqual(keyPath, \X.y.g?[failable: 0])
+    }
+    
 }
 
 
@@ -152,12 +200,16 @@ fileprivate struct Y: Contextual {
         "z": \Self.z,
         "d": \Self.d,
         "e": \Self.e,
+        "f": \Self.f,
+        "g": \Self.g,
     ]
 
     let y: Int
     let z: Z?
     let d: [String: Int]
     let e: [String: Int]?
+    let f: [Int]
+    let g: [Int]?
 
 }
 

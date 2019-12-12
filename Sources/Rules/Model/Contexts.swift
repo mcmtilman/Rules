@@ -125,7 +125,7 @@ public extension Contextual {
         keyPaths[key]
     }
 
-    /// Returns a known optional type key path for given key, or nil if not found
+    /// Returns a known optional type key path for given key, or nil if not found.
     /// By default this is a registered optional type key path.
     static func optionalKeyPath(for key: String) -> AnyKeyPath? {
         optionalKeyPaths[key]
@@ -133,7 +133,7 @@ public extension Contextual {
 
     // MARK: Combining key paths
     
-    /// Returns a combined key path consisting of known key paths, or nil of not possible.
+    /// Returns a combined key path consisting of known key paths, or nil if not possible.
     /// Generic parameter V denotes the expected value type of the key path.
     ///
     /// Construction fails if:
@@ -188,10 +188,45 @@ extension Dictionary: Contextual where Key == String {
         \Self[key]
     }
 
-    /// Returns a optional key path for given dictionary key.
+    /// Returns a key path for given optional dictionary key.
     /// The key may not exist.
     public static func optionalKeyPath(for key: String) -> AnyKeyPath? {
         \Self?.?[key]
     }
 
+}
+
+/**
+ Arrays support dynamic creation of a key path given an array index.
+ Key paths use failable subscripts.
+*/
+extension Array: Contextual {
+    
+    // MARK: Contextual conformance
+    
+    /// Returns a key path for given key representing an array index, or nil otherwise.
+    /// The index may not exist.
+    public static func keyPath(for key: String) -> AnyKeyPath? {
+        guard let index = Int(key) else { return nil }
+        
+        return \Self[failable: index]
+    }
+
+    /// Returns a key path for given optional array key representing an array index, or nil otherwise.
+    /// The index may not exist.
+    public static func optionalKeyPath(for key: String) -> AnyKeyPath? {
+        guard let index = Int(key) else { return nil }
+        
+        return \Self?.?[failable: index]
+    }
+
+    // MARK: Subscripting
+    
+    // Returns the element at given index if the index is in range, nil otherwise.
+    public subscript(failable index: Int) -> Element? {
+        guard index >= 0, index < count else { return nil }
+        
+        return self[index]
+    }
+    
 }
