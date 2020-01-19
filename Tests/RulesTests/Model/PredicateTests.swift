@@ -114,7 +114,7 @@ extension PredicateTests {
 
 
 /**
- Test suite.
+ Predicate test suite.
  */
 extension PredicateTests {
     

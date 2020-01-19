@@ -73,7 +73,7 @@ extension FunctionTests {
 
 
 /**
- Test suite.
+ Function test suite.
  */
 extension FunctionTests {
     

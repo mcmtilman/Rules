@@ -164,6 +164,7 @@ public extension Contextual {
 
 }
 
+
 /**
  Optional types delegate requests for their key paths to their wrapped types.
  */
@@ -195,6 +196,7 @@ extension Dictionary: Contextual where Key == String {
     }
 
 }
+
 
 /**
  Arrays support dynamic creation of a key path given an array index.

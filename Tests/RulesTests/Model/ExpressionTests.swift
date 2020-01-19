@@ -74,7 +74,7 @@ class ExpressionTests: XCTestCase {
 
 
 /**
- Test suite.
+ Expression test suite.
  */
 extension ExpressionTests {
     
