@@ -56,6 +56,64 @@ class RuleTests: XCTestCase {
         XCTAssertNil(try ruleSetMatchFirst.eval(in: ()))
     }
 
+    // Test if first matching rule is selected when multiple rules match.
+    func testEvalMatchFirstRuleSet() throws {
+        let nilRule = ConditionAssertionRule(name: "Nil rule", condition: false, assertion: true)
+        let trueRule = ConditionAssertionRule(name: "True rule", condition: true, assertion: true)
+        let falseRule = ConditionAssertionRule(name: "False rule", condition: true, assertion: false)
+        let trueRuleSet = RuleSet(name: "True rule set", condition: true, rules: [nilRule, trueRule, falseRule], matchAll: false)
+        let falseRuleSet = RuleSet(name: "False rule set", condition: true, rules: [nilRule, falseRule, trueRule], matchAll: false)
+
+        guard let trueResult = try trueRuleSet.eval(in: ()), let falseResult = try falseRuleSet.eval(in: ()) else { return XCTFail("nill result") }
+        
+        XCTAssertTrue(trueResult)
+        XCTAssertFalse(falseResult)
+    }
+
+    // Test evaluating a rule set with multiple matching rules.
+    func testEvalMatchAllRuleSet() throws {
+        let nilRule = ConditionAssertionRule(name: "Nil rule", condition: false, assertion: true)
+        let trueRule = ConditionAssertionRule(name: "True rule", condition: true, assertion: true)
+        let falseRule = ConditionAssertionRule(name: "False rule", condition: true, assertion: false)
+        let trueRuleSet = RuleSet(name: "True rule set", condition: true, rules: [nilRule, trueRule, nilRule, trueRule, nilRule])
+        let falseRuleSet = RuleSet(name: "False rule set", condition: true, rules: [nilRule, trueRule, nilRule, falseRule, nilRule])
+
+        guard let trueResult = try trueRuleSet.eval(in: ()), let falseResult = try falseRuleSet.eval(in: ()) else { return XCTFail("nill result") }
+        
+        XCTAssertTrue(trueResult)
+        XCTAssertFalse(falseResult)
+    }
+
+    // Test evaluating a rule set with matching nested rule set evaluating to true.
+    func testEvalNestedRuleSet() throws {
+        let nilRule = ConditionAssertionRule(name: "Nil rule", condition: false, assertion: true)
+        let trueRule = ConditionAssertionRule(name: "True rule", condition: true, assertion: true)
+        let childRuleSet = RuleSet(name: "Child rule set", condition: true, rules: [nilRule, trueRule, nilRule])
+        let parentRuleSet = RuleSet(name: "Parent rule set", condition: true, rules: [nilRule, childRuleSet, trueRule, nilRule])
+
+        guard let result = try parentRuleSet.eval(in: ()) else { return XCTFail("nill result") }
+        
+        XCTAssertTrue(result)
+    }
+
+    // Test evaluating a rule set with matching nested rule set evaluating to nil.
+    func testEvalNilNestedRuleSet() throws {
+        let rule = ConditionAssertionRule(name: "Nil rule", condition: false, assertion: true)
+        let childRuleSet = RuleSet(name: "Child rule set", condition: true, rules: [rule])
+        let parentRuleSet = RuleSet(name: "Parent rule set", condition: true, rules: [childRuleSet])
+
+        XCTAssertNil(try parentRuleSet.eval(in: ()))
+    }
+
+    // Test evaluating a rule set with non-matching nested rule set.
+    func testEvalNonMatchingNestedRuleSet() throws {
+        let rule = ConditionAssertionRule(name: "Rule", condition: true, assertion: true)
+        let childRuleSet = RuleSet(name: "Child rule set", condition: false, rules: [rule])
+        let parentRuleSet = RuleSet(name: "Parent rule set", condition: true, rules: [childRuleSet])
+
+        XCTAssertNil(try parentRuleSet.eval(in: ()))
+    }
+
 }
 
 
@@ -70,6 +128,11 @@ extension RuleTests {
         ("testEvalNonMatchingRuleSet", testEvalNonMatchingRuleSet),
         ("testEvalMatchingRuleSet", testEvalMatchingRuleSet),
         ("testEvalEmptyRuleSet", testEvalEmptyRuleSet),
+        ("testEvalMatchFirstRuleSet", testEvalMatchFirstRuleSet),
+        ("testEvalMatchAllRuleSet", testEvalMatchAllRuleSet),
+        ("testEvalNestedRuleSet", testEvalNestedRuleSet),
+        ("testEvalNilNestedRuleSet", testEvalNilNestedRuleSet),
+        ("testEvalNonMatchingNestedRuleSet", testEvalNonMatchingNestedRuleSet),
     ]
 
 }
