@@ -15,7 +15,9 @@
 */
 public class Rule {
     
-    /// Returns the result of evaluating the rule in given context.
+    // MARK: Evaluating
+    
+/// Returns the result of evaluating the rule in given context.
     /// The result is either true or false if the rule matches, or nil if there is no match.
     /// Collects statistics.
     public func eval<C>(in context: C, statistics: inout Statistics) throws -> Bool? {
@@ -38,8 +40,12 @@ public class Rule {
 */
 public struct Statistics {
     
+    // MARK: Stored properties
+    
     /// Total number of matched elementary rules.
     public fileprivate (set) var matchedRules = 0
+    
+    // MARK: Initializing
     
     /// Default initializer is internal.
     public init()  {
@@ -54,14 +60,20 @@ public struct Statistics {
 */
 public class ConditionAssertionRule<A: Expression, B: Expression>: Rule where A.Eval == Bool, B.Eval == Bool {
     
+    // MARK: Stored properties
+    
+    /// Name of the rule.
+    public let name: String
+    
+    // MARK: Private stored properties
+    
     // Assertion of the rule.
     private let assertion: B
 
     // Condition of the rule.
     private let condition: A
     
-    /// Name of the rule.
-    public let name: String
+    // MARK: Initializing
     
     /// Initializes the rule.
     public init(name: String, condition: A, assertion: B) {
@@ -69,6 +81,8 @@ public class ConditionAssertionRule<A: Expression, B: Expression>: Rule where A.
         self.condition = condition
         self.assertion = assertion
     }
+    
+    // MARK: Evaluating
     
     /// Evaluates the rule in given context, according to the following strategy:
     /// * If the rule matches, answer the result of evaluating the assertion.
@@ -87,22 +101,28 @@ public class ConditionAssertionRule<A: Expression, B: Expression>: Rule where A.
 /**
  A rule set contains zero or more rules.
  A rule set has a condition that must be true (*the rule set matches*), If false, the rules in the set are ignored.
- As rule sets subclass Rule, rule sets may be nested.
+ Rule sets may be nested.
 */
 public class RuleSet<A: Expression>: Rule where A.Eval == Bool {
     
+    // MARK: Stored properties
+    
+    /// Name of the rule set.
+    public let name: String
+    
+    // MARK: Private stored properties
+    
     // Condition of the rule set.
     private let condition: A
-    
-    // Ordered set of rules.
-    private let rules: [Rule]
     
     // If *matchAll* is true (default), evaluation returns the AND-combination of the results of all matching rules.
     // Otherwise, evaluation returns the result of the first matching rule.
     private let matchAll: Bool
     
-    /// Name of the rule set.
-    public let name: String
+    // Ordered set of rules.
+    private let rules: [Rule]
+    
+    // MARK: Initializing
     
     /// Initializes the rule set.
     public init(name: String, condition: A, rules: [Rule], matchAll: Bool = true) {
@@ -111,6 +131,8 @@ public class RuleSet<A: Expression>: Rule where A.Eval == Bool {
         self.rules = rules
         self.matchAll = matchAll
     }
+    
+    // MARK: Evaluating
     
     /// Evaluates the rule set in given context, according to the following strategy:
     /// * If the rule set does not match or if no rule matches return nil.
