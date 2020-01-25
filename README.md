@@ -87,13 +87,17 @@ A *Rule set* is an *ordered* collection of basic rules or (nested) rule sets. Li
 
 The semantics is as follows:
 * If the condition evaluates to false, the rules are ignored and the evaluation returns nil. We say that the rule set does *not match* the input data.
-* If the condition evaluates to true, the evaluation of the rule set is computed based on the evaluations of the rules in the rule set. In this case the rule set *matches* the input data. if none of the (nested) rules in the rule set match, the rule set evaluates to nil.
+* If the condition evaluates to true, the rule set *matches* the input data. The evaluation of the rule set is based on the evaluations of the rules in the rule set.
 
-### Rule set computation
+### Evaluating a matching rule set
+
+If none of the (nested) rules in the rule set match, the rule set evaluates to nil. This allows us to detect the case when no rule results in either true or false, and to define a proper default behavior.
 
 What happens when one or more rules in a rule set match depends on the *matchAll* property of the rule set:
-* If *matchAll* is true, the rule set returns true if all matching rules in the rule set evaluate to true, otherwise the result is false (AND semantics). Execution of the rules is lazy,
+* If *matchAll* is true, the rule set returns true if all matching rules in the rule set evaluate to true, otherwise the result is false (AND semantics).
 * If *matchAll* is false, the rule set returns the result of the first matching rule.
+
+In both cases execution of the rules and nested rule sets is lazy.
 
 # Engine
 
