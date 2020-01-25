@@ -15,10 +15,34 @@
 */
 public class Rule {
     
+    /// Returns the result of evaluating the rule in given context.
+    /// The result is either true or false if the rule matches, or nil if there is no match.
+    /// Collects statistics.
+    public func eval<C>(in context: C, statistics: inout Statistics) throws -> Bool? {
+        fatalError("Abstract method must be overridden")
+    }
+
     /// Answer the result of evaluating the rule in given context.
     /// The result is either true or false if the rule matches, or nil if there is no match.
-    func eval<C>(in context: C) throws -> Bool? {
-        fatalError("Abstract method must be overridden")
+    public func eval<C>(in context: C) throws -> Bool? {
+        var statistics = Statistics()
+        
+        return try eval(in: context, statistics: &statistics)
+    }
+
+}
+
+
+/**
+ Execution statistics.
+*/
+public struct Statistics {
+    
+    /// Total number of matched elementary rules.
+    public fileprivate (set) var matchedRules = 0
+    
+    /// Default initializer is internal.
+    public init()  {
     }
 
 }
@@ -49,8 +73,10 @@ public class ConditionAssertionRule<A: Expression, B: Expression>: Rule where A.
     /// Evaluates the rule in given context, according to the following strategy:
     /// * If the rule matches, answer the result of evaluating the assertion.
     /// * Return nil otherwise.
-    public override func eval<C>(in context: C) throws -> Bool? {
+    public override func eval<C>(in context: C, statistics: inout Statistics) throws -> Bool? {
         guard try condition.eval(in: context) else { return nil }
+        
+        statistics.matchedRules += 1
         
         return try assertion.eval(in: context)
     }
@@ -90,18 +116,17 @@ public class RuleSet<A: Expression>: Rule where A.Eval == Bool {
     /// * If the rule set does not match or if no rule matches return nil.
     /// * If *matchAll* is true (default), return the AND-combination of the results of all matching rules.
     /// * Otherwise, return the result of the first matching rule.
-    public override func eval<C>(in context: C) throws -> Bool? {
+    public override func eval<C>(in context: C, statistics: inout Statistics) throws -> Bool? {
         guard try condition.eval(in: context) else { return nil }
-        var result: Bool? = nil
+        let matchedRules = statistics.matchedRules
         
         for rule in rules {
-            if let eval = try rule.eval(in: context) {
+            if let eval = try rule.eval(in: context, statistics: &statistics) {
                 guard matchAll, eval else { return eval }
-                result = true
             }
         }
         
-        return result
+        return statistics.matchedRules > matchedRules ? true : nil
     }
 
 }

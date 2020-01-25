@@ -114,6 +114,41 @@ class RuleTests: XCTestCase {
         XCTAssertNil(try parentRuleSet.eval(in: ()))
     }
 
+    // Test matching rules statistics using match first rule set.
+    func testMatchFirstRuleSetStatistics() throws {
+        let rule = ConditionAssertionRule(name: "True rule", condition: true, assertion: true)
+        let ruleSet = RuleSet(name: "Rule set", condition: true, rules: [rule, rule, rule, rule], matchAll: false)
+        var statistics = Statistics()
+
+        guard let _ = try ruleSet.eval(in: (), statistics: &statistics) else { return XCTFail("nill result") }
+        
+        XCTAssertEqual(statistics.matchedRules, 1)
+    }
+
+    // Test matching rules statistics using match all rule set.
+    func testMatchAllRuleSetStatistics() throws {
+        let rule = ConditionAssertionRule(name: "True rule", condition: true, assertion: true)
+        let ruleSet = RuleSet(name: "Rule set", condition: true, rules: [rule, rule, rule, rule])
+        var statistics = Statistics()
+
+        guard let _ = try ruleSet.eval(in: (), statistics: &statistics) else { return XCTFail("nill result") }
+        
+        XCTAssertEqual(statistics.matchedRules, 4)
+    }
+
+    // Test matching rules statistics using nested rule sets.
+    func testNestedRuleSetStatistics() throws {
+        let nilRule = ConditionAssertionRule(name: "Nil rule", condition: false, assertion: true)
+        let trueRule = ConditionAssertionRule(name: "True rule", condition: true, assertion: true)
+        let childRuleSet = RuleSet(name: "Child rule set", condition: true, rules: [nilRule, trueRule, nilRule])
+        let parentRuleSet = RuleSet(name: "Parent rule set", condition: true, rules: [nilRule, childRuleSet, trueRule, nilRule])
+        var statistics = Statistics()
+
+        guard let _ = try parentRuleSet.eval(in: (), statistics: &statistics) else { return XCTFail("nill result") }
+        
+        XCTAssertEqual(statistics.matchedRules, 2)
+    }
+
 }
 
 
@@ -133,6 +168,8 @@ extension RuleTests {
         ("testEvalNestedRuleSet", testEvalNestedRuleSet),
         ("testEvalNilNestedRuleSet", testEvalNilNestedRuleSet),
         ("testEvalNonMatchingNestedRuleSet", testEvalNonMatchingNestedRuleSet),
-    ]
+        ("testMatchFirstRuleSetStatistics", testMatchFirstRuleSetStatistics),
+        ("testMatchAllRuleSetStatistics", testMatchAllRuleSetStatistics),
+        ("testNestedRuleSetStatistics", testNestedRuleSetStatistics),    ]
 
 }
