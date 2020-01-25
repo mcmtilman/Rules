@@ -94,10 +94,8 @@ The semantics is as follows:
 If none of the (nested) rules in the rule set match, the rule set evaluates to nil. This allows us to detect the case when no rule results in either true or false, and to define a proper default behavior.
 
 What happens when one or more rules in a rule set match depends on the *matchAll* property of the rule set:
-* If *matchAll* is true, the rule set returns true if all matching rules in the rule set evaluate to true, otherwise the result is false (AND semantics).
+* If *matchAll* is true, the rule set returns true if all matching rules in the rule set evaluate to true, otherwise the result is false (lazy AND semantics).
 * If *matchAll* is false, the rule set returns the result of the first matching rule.
-
-In both cases execution of the rules and nested rule sets is lazy.
 
 # Engine
 
