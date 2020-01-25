@@ -17,7 +17,7 @@ public class Rule {
     
     // MARK: Evaluating
     
-/// Returns the result of evaluating the rule in given context.
+    /// Returns the result of evaluating the rule in given context.
     /// The result is either true or false if the rule matches, or nil if there is no match.
     /// Collects statistics.
     public func eval<C>(in context: C, statistics: inout Statistics) throws -> Bool? {
