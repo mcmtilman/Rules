@@ -67,6 +67,34 @@ The *Contextual* protocol allows context types to specify building blocks of 'el
 
 # Rule model
 
+The rule model is basically a composite structure consisting of basic types of rules and rule sets consisting of basic rules and nested rule sets.
+
+## Basic rules
+
+Basic rules consist of validation rules and data rules to enrich or modify the evaluation context.
+
+### Condition-assertion rules
+
+*Condition-assertion rules* allow us to validate input data in the context. Both condition and assertion are expressions.
+
+The semantics is as follows:
+* If the condition evaluates to false, the assertion is skipped and the evaluation returns nil. We say that the rule does *not match* the input data.
+* If the condition evaluates to true, the evaluation of the rule is the result of evaluating the assertion. In this case the rule *matches* the input data.
+
+## Rule sets
+
+A *Rule set* is an *ordered* collection of basic rules or (nested) rule sets. Like condition-assertion rules, rule sets have a condition (which is also an expression).
+
+The semantics is as follows:
+* If the condition evaluates to false, the rules are ignored and the evaluation returns nil. We say that the rule set does *not match* the input data.
+* If the condition evaluates to true, the evaluation of the rule set is computed based on the evaluations of the rules in the rule set. In this case the rule set *matches* the input data. if none of the (nested) rules in the rule set match, the rule set evaluates to nil.
+
+### Rule set computation
+
+What happens when one or more rules in a rule set match depends on the *matchAll* property of the rule set:
+* If *matchAll* is true, the rule set returns true if all matching rules in the rule set evaluate to true, otherwise the result is false (AND semantics). Execution of the rules is lazy,
+* If *matchAll* is false, the rule set returns the result of the first matching rule.
+
 # Engine
 
 # Rule DSL and function builders
