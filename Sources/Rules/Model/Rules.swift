@@ -111,16 +111,16 @@ public class RuleSet<A: Expression>: Rule where A.Eval == Bool {
     /// * Otherwise, return the result of the first matching rule.
     public override func eval<C>(in context: C) throws -> Bool? {
         guard try condition.eval(in: context) else { return nil }
-        var hasMatchingRules = false
+        var result: Bool? = nil
         
         for rule in rules {
             if let eval = try rule.eval(in: context) {
                 guard matchAll, eval else { return eval }
-                hasMatchingRules = true
+                result = true
             }
         }
         
-        return hasMatchingRules ? true : nil
+        return result
     }
 
 }
