@@ -18,11 +18,10 @@ public class Rule {
     // MARK: Evaluating
     
     /// Returns the result of evaluating the rule in given context.
-    /// The result is either true or false if the rule matches, or nil if there is no match.
+    /// The result is either true, false or nil. A nil result indicates a failure to determine a Boolean outcome. This may e.g. indicate that the rule's pre-condition does not match the input, or that no matching nested rules were found.
     public func eval<C>(in context: C) throws -> Bool? {
         fatalError("Abstract method must be overridden")
     }
-
 
 }
 
@@ -106,21 +105,21 @@ public class RuleSet<A: Expression>: Rule where A.Eval == Bool {
     // MARK: Evaluating
     
     /// Evaluates the rule set in given context, according to the following strategy:
-    /// * If the rule set does not match or if no rule matches return nil.
+    /// * If the rule set does not match or if no rule in the set has a boolean result return nil.
     /// * If *matchAll* is true (default), return the AND-combination of the results of all matching rules.
     /// * Otherwise, return the result of the first matching rule.
     public override func eval<C>(in context: C) throws -> Bool? {
         guard try condition.eval(in: context) else { return nil }
-        var matchingRules = 0
+        var booleanResults = 0
         
         for rule in rules {
             if let eval = try rule.eval(in: context) {
-                matchingRules += 1
+                booleanResults += 1
                 guard matchAll, eval else { return eval }
             }
         }
         
-        return matchingRules > 0 ? true : nil
+        return booleanResults > 0 ? true : nil
     }
 
 }
