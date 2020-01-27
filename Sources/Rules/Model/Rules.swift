@@ -30,7 +30,7 @@ public class Rule {
  A condition-assertion rule asserts that the input is valid, provided that the condition is true (*the rule matches*).
  If the condition is false, the assertion is not evaluated.
 */
-public class ConditionAssertionRule<A: Expression, B: Expression>: Rule where A.Eval == Bool, B.Eval == Bool {
+public final class ConditionAssertionRule<A: Expression, B: Expression>: Rule where A.Eval == Bool, B.Eval == Bool {
     
     // MARK: Stored properties
     
@@ -73,7 +73,7 @@ public class ConditionAssertionRule<A: Expression, B: Expression>: Rule where A.
  A rule set has a condition that must be true (*the rule set matches*), If false, the rules in the set are ignored.
  Rule sets may be nested.
 */
-public class RuleSet<A: Expression>: Rule where A.Eval == Bool {
+public final class RuleSet<A: Expression>: Rule where A.Eval == Bool {
     
     // MARK: Stored properties
     

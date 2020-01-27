@@ -15,6 +15,24 @@ import Rules
  */
 class RulePerformanceTests: XCTestCase {
 
+    // MARK: Testing basic rules
+    
+    // Test performance of a condition-assertion rule.
+    func testConditionAssertionRule() {
+        struct X {
+            let i = 0, s = "string", c = true
+        }
+        let assertion = And(EQ(\X.i, 0), IsPrefix("str", \X.s))
+        let rule = ConditionAssertionRule(name: "Rule", condition: \X.c, assertion: assertion)
+        let context = X()
+
+        self.measure {
+            for _ in 1 ... 1000 {
+               _ = try? rule.eval(in: context)
+            }
+        }
+    }
+
     // MARK: Testing rule sets
     
     // Test performance of a simple rule set with one rule.
@@ -48,12 +66,14 @@ extension RulePerformanceTests {
 
 }
 
+
 /**
  Rule performance test suite.
  */
 extension RulePerformanceTests {
     
     static var allTests = [
+        ("testConditionAssertionRule", testConditionAssertionRule),
         ("testSimpleRuleSet", testSimpleRuleSet),
     ]
     
