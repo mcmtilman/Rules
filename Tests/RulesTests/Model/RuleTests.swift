@@ -3,6 +3,8 @@
 //  RulesTests
 //
 //  Created by Michel Tilman on 19/01/2020.
+//  Copyright © 2019 Dotted.Pair.
+//  Licensed under Apache License v2.0.
 //
 
 import XCTest
@@ -13,7 +15,7 @@ import Rules
  */
 class RuleTests: XCTestCase {
     
-    // MARK: Testing condition-assertion rules.
+    // MARK: Testing condition-assertion rules
     
     // Test if a non-matching rule evaluates to nil.
     func testEvalNonMatchingCARule() {
@@ -27,7 +29,7 @@ class RuleTests: XCTestCase {
         XCTAssertTrue(try XCTUnwrap(try ConditionAssertionRule(name: "Rule", condition: true, assertion: true).eval(in: ())))
     }
 
-    // MARK: Testing rule sets.
+    // MARK: Testing rule sets
     
     // Test if a non-matching ruleset evaluates to nil.
     func testEvalNonMatchingRuleSet() {
@@ -113,6 +115,34 @@ class RuleTests: XCTestCase {
 
         XCTAssertNil(try parentRuleSet.eval(in: ()))
     }
+    
+    // MARK: Testing errors
+    
+    // Test evaluating a rule set containing key paths with the wrong context.
+    func testInvalidContext() {
+        struct X {
+            let i = 0, s = "string", rc = true, rsc = true
+        }
+        let assertion = And(EQ(\X.i, 0), IsPrefix("str", \X.s))
+        let rule = ConditionAssertionRule(name: "Rule", condition: \X.rc, assertion: assertion)
+        let ruleSet = RuleSet(name: "Rule set", condition: \X.rsc, rules: [rule])
+
+        XCTAssertThrowsError(try ruleSet.eval(in: ())) { error in
+            XCTAssertEqual(error as? EvalError, EvalError.invalidContext(message: "Context of type X expected"))
+        }
+    }
+
+}
+
+
+/**
+ Standard predicates.
+ */
+extension RuleTests {
+    
+    typealias And = Predicate.And
+    typealias EQ = Predicate.IsEqual
+    typealias IsPrefix = Predicate.IsPrefix
 
 }
 
@@ -133,5 +163,7 @@ extension RuleTests {
         ("testEvalNestedRuleSet", testEvalNestedRuleSet),
         ("testEvalNilNestedRuleSet", testEvalNilNestedRuleSet),
         ("testEvalNonMatchingNestedRuleSet", testEvalNonMatchingNestedRuleSet),
+        ("testInvalidContext", testInvalidContext),
     ]
+    
 }
