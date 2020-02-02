@@ -87,7 +87,6 @@ public class Trie<Key, Value> where Key: Hashable {
     // MARK: Updating
     
     /// Updates the value of the node identified by given key chain, extending the trie if necessary.
-    /// A nil value clears the node's value, but currently does not re-organize the trie.
     public func updateValue<K>(_ value: Value, forKeys keys: K) where K: Collection, K.Element == Key {
         guard !keys.isEmpty else { return }
         var node = root
