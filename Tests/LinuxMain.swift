@@ -10,5 +10,6 @@ tests += FunctionTests.allTests()
 tests += PredicateTests.allTests()
 tests += RuleTests.allTests()
 tests += RulePerformanceTests.allTests()
+tests += TrieTests.allTests()
 
 XCTMain(tests)

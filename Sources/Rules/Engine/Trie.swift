@@ -29,16 +29,25 @@ public class Trie<Key, Value> where Key: Hashable {
         
         // MARK: Stored properties
         
-        // Links to zero or more child nodes.
+        /// Links to zero or more child nodes.
         var childNodes = [Key: Node]()
         
-        // Optional value, nil if a key chain leading to and ending with this node has no value.
+        /// Optional value, nil if a key chain leading to and ending with this node has no value.
         var value: Value?
+        
+        // MARK: Computed properties
+        
+        /// Returns the number of child nodes with non-nil value, including this node.
+        var count: Int {
+            let childCount = childNodes.values.reduce(0) { sum, node in sum + node.count }
+            
+            return value == nil ? childCount : childCount + 1
+        }
         
         // MARK: Accessing / constructing trie
         
-        // Returns the node identified by given key path.
-        // Creates the child node if missing.
+        /// Returns the node identified by given key path.
+        /// Creates the child node if missing.
         func childNodeWithKey(_ key: Key) -> Node {
             if let node = childNodes[key] { return node }
             let node = Node()
@@ -50,16 +59,27 @@ public class Trie<Key, Value> where Key: Hashable {
 
     }
     
+    // MARK: Computed properties
+    
+    public var count: Int {
+        root.count
+    }
+    
     // MARK: Private stored properties
     
     // Root node. Does not contain a value.
     private let root = Node()
     
+    // MARK: Initializing
+    
+    /// Default initializer
+    public init() {}
+    
     // MARK: Accessing
     
     /// Returns the non-nil value of the node with longest prefix of given key chain, if such a node exists,
     /// Returns nil otherwise.
-    public func getLongestPrefixValue<K>(forKeys keys: K) -> Value? where K: Collection, K.Element == Key {
+    public func getLastValue<K>(forKeys keys: K) -> Value? where K: Collection, K.Element == Key {
         var node = root
         var lastValue = node.value
         
