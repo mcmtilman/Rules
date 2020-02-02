@@ -30,7 +30,7 @@ public class Trie<Key, Value> where Key: Hashable {
         // MARK: Stored properties
         
         // Links to zero or more child nodes.
-        var childNodes: [Key: Node] = [:]
+        var childNodes = [Key: Node]()
         
         // Optional value, nil if a key chain leading to and ending with this node has no value.
         var value: Value?
@@ -48,7 +48,7 @@ public class Trie<Key, Value> where Key: Hashable {
             return node
         }
 
-}
+    }
     
     // MARK: Private stored properties
     
