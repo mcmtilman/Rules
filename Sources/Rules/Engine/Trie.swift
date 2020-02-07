@@ -7,16 +7,6 @@
 //  Licensed under Apache License v2.0.
 //
 
-/**
- Trie matchers determine if a given trie node matches a key in a key chain.
-*/
-public protocol TrieMatcher {
-    
-    /// Returns true if the key matches.
-    func matches<K>(key: K) throws -> Bool
-
-}
-
 
 /**
  Prefix trie structure consisting of nodes containing an optional value and zero or more child nodes.
@@ -39,9 +29,7 @@ public class Trie<Key, Value> where Key: Hashable {
         
         /// Returns the number of child nodes with non-nil value, including this node.
         var count: Int {
-            let childCount = childNodes.values.reduce(0) { sum, node in sum + node.count }
-            
-            return value == nil ? childCount : childCount + 1
+            childNodes.values.reduce(value == nil ? 0 : 1) { sum, node in sum + node.count }
         }
         
         // MARK: Accessing / constructing trie
@@ -61,6 +49,7 @@ public class Trie<Key, Value> where Key: Hashable {
     
     // MARK: Computed properties
     
+    /// Returns the number of nodes with non-nil value.
     public var count: Int {
         root.count
     }
@@ -79,7 +68,7 @@ public class Trie<Key, Value> where Key: Hashable {
     
     /// Returns the non-nil value of the node with longest prefix of given key chain, if such a node exists,
     /// Returns nil otherwise.
-    public func getLastValue<K>(forKeys keys: K) -> Value? where K: Collection, K.Element == Key {
+    public func getBestValue<K>(forKeys keys: K) -> Value? where K: Collection, K.Element == Key {
         var node = root
         var lastValue = node.value
         
