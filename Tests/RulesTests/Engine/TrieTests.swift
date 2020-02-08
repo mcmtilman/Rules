@@ -19,7 +19,7 @@ class TrieTests: XCTestCase {
     
     // Test if accessing an empty trie.
     func testEmptyTrie() {
-        let trie = Trie<String, Int>()
+        let trie = DefaultTrie<String, Int>()
         
         XCTAssertEqual(trie.count, 0)
         XCTAssertNil(trie.getValue(forKeys: ["a"]))
@@ -28,7 +28,7 @@ class TrieTests: XCTestCase {
 
     // Test trie count.
     func testCount() {
-        let trie = Trie<String, Int>()
+        let trie = DefaultTrie<String, Int>()
          
         XCTAssertEqual(trie.count, 0)
         trie.updateValue(1, forKeys: ["a"])
@@ -41,7 +41,7 @@ class TrieTests: XCTestCase {
 
     // Test getting values for key chaina of length 1.
     func testGetValue() {
-        let trie = Trie<String, Int>()
+        let trie = DefaultTrie<String, Int>()
          
         trie.updateValue(1, forKeys: ["a"])
         XCTAssertEqual(trie.getValue(forKeys: ["a"]), 1)
