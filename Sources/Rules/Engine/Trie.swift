@@ -35,7 +35,7 @@ public protocol TrieNode {
 
     // MARK: Acessing / constructing child nodes
     
-    /// Returns the child node identified by given key, or nil if it does not exist.
+    /// Returns (or sets) the child node identified by given key, or nil if it does not exist.
     subscript(k: Key) -> Self? { get set }
 
     /// Returns the child node identified by given key.
@@ -101,7 +101,8 @@ public class Trie<Key, Value, Node> where Node: TrieNode, Key == Node.Key, Value
     // MARK: Updating
     
     /// Updates the value of the node identified by given key chain, extending the trie if necessary.
-    public func updateValue<K>(_ value: Value, forKeys keys: K) where K: Collection, K.Element == Key {
+    /// A nil value clears the node's value, but does not restructure the trie.
+    public func updateValue<K>(_ value: Value?, forKeys keys: K) where K: Collection, K.Element == Key {
         guard !keys.isEmpty else { return }
         var node = root
         
@@ -144,7 +145,7 @@ public final class Node<Key, Value>: TrieNode where Key: Hashable {
     
     // MARK: Accessing / constructing trie nodes
      
-    /// Returns the child node identified by given key, or nil if it does not exist.
+    /// Returns (or sets) the child node identified by given key, or nil if it does not exist.
     public subscript(k: Key) -> Node? {
         get { children[k] }
         set { children[k] = newValue }
