@@ -99,6 +99,21 @@ What happens when one or more rules in a rule set match depends on the *matchAll
 
 # Engine
 
+The engine uses a *trie* structure to link a rules to a path of keys, for instance to the path segments of URLs.
+
+## Trie lookup
+
+Looking up rules uses two strategies:
+* an exact match of the key path
+* a longest prefix match.
+
+### Example
+
+Suppose that the engine has only one rule R registered with, say, path ["a", "b", "c"].
+
+Looking up a rule for path ["a", "b", "c", "d"] results in rule R when using longest prefix matching, but no rule when using exact match.
+Looking up a rule for path ["a", "b", "c"] results in rule R, regardless of the strategy,
+
 # Rule DSL and function builders
 
 # Requirements
