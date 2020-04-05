@@ -115,8 +115,8 @@ public class Trie<Key, Value, Node> where Node: TrieNode, Key == Node.Key, Value
 }
 
 /**
- Deafult implementation of a trie node.
- Maintains an optional value and links to zero or more child nodes.
+ Default implementation of a trie node.
+ Contains an optional value and links to zero or more child nodes.
  Looking up nodes by key is based on a literal match.
  */
 public final class Node<Key, Value>: TrieNode where Key: Hashable {
