@@ -7,6 +7,8 @@
 //  Licensed under Apache License v2.0.
 //
 
+import Common
+
 /**
  A rule engine provides lookup of rules by means of longest prefix tries using the default (i.e. literal) key matching.
 */
