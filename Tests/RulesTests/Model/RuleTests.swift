@@ -145,25 +145,3 @@ extension RuleTests {
     typealias IsPrefix = Predicate.IsPrefix
 
 }
-
-
-/**
- Rule test suite.
- */
-extension RuleTests {
-    
-    static var allTests = [
-        ("testEvalNonMatchingCARule", testEvalNonMatchingCARule),
-        ("testEvalMatchingCARule", testEvalMatchingCARule),
-        ("testEvalNonMatchingRuleSet", testEvalNonMatchingRuleSet),
-        ("testEvalMatchingRuleSet", testEvalMatchingRuleSet),
-        ("testEvalEmptyRuleSet", testEvalEmptyRuleSet),
-        ("testEvalMatchFirstRuleSet", testEvalMatchFirstRuleSet),
-        ("testEvalMatchAllRuleSet", testEvalMatchAllRuleSet),
-        ("testEvalNestedRuleSet", testEvalNestedRuleSet),
-        ("testEvalNilNestedRuleSet", testEvalNilNestedRuleSet),
-        ("testEvalNonMatchingNestedRuleSet", testEvalNonMatchingNestedRuleSet),
-        ("testInvalidContext", testInvalidContext),
-    ]
-    
-}

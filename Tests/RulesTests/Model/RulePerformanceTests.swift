@@ -65,16 +65,3 @@ extension RulePerformanceTests {
     typealias IsPrefix = Predicate.IsPrefix
 
 }
-
-
-/**
- Rule performance test suite.
- */
-extension RulePerformanceTests {
-    
-    static var allTests = [
-        ("testConditionAssertionRule", testConditionAssertionRule),
-        ("testSimpleRuleSet", testSimpleRuleSet),
-    ]
-    
-}

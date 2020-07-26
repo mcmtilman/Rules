@@ -71,19 +71,3 @@ class ExpressionTests: XCTestCase {
     }
     
 }
-
-
-/**
- Expression test suite.
- */
-extension ExpressionTests {
-    
-    static var allTests = [
-        ("testEvalInvalidContext", testEvalInvalidContext),
-        ("testEvalNilContext", testEvalNilContext),
-        ("testEvalSubclassContext", testEvalSubclassContext),
-        ("testEvalValidContext", testEvalValidContext),
-        ("testEvalNestedKeyPath", testEvalNestedKeyPath),
-    ]
-
-}

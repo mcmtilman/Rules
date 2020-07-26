@@ -247,28 +247,3 @@ fileprivate struct ZD: Contextual {
     let a: Int
 
 }
-
-
-/**
- Context test suite.
- */
-extension ContextTests {
-    
-    static var allTests = [
-        ("testKnownKeyPath", testKnownKeyPath),
-        ("testKnownOptionalKeyPath", testKnownOptionalKeyPath),
-        ("testUnknownKeyPath", testUnknownKeyPath),
-        ("testKnownDictionaryKeyPath", testKnownDictionaryKeyPath),
-        ("testKnownOptionalDictionaryKeyPath", testKnownOptionalDictionaryKeyPath),
-        ("testConstructKnownKeyPath", testConstructKnownKeyPath),
-        ("testConstructNonOptionalKeyPath", testConstructNonOptionalKeyPath),
-        ("testConstructKeyPathEndingWithOptional", testConstructKeyPathEndingWithOptional),
-        ("testConstructKeyPathContainingOptional", testConstructKeyPathContainingOptional),
-        ("testConstructInvalidKeyPath", testConstructInvalidKeyPath),
-        ("testOptionalChaining", testOptionalChaining),
-        ("testSimulateOptionalChaining", testSimulateOptionalChaining),
-        ("testConstructDictionaryKeyPath", testConstructDictionaryKeyPath),
-        ("testConstructOptionalDictionaryKeyPath", testConstructOptionalDictionaryKeyPath),
-    ]
-
-}

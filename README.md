@@ -118,4 +118,4 @@ Looking up a rule for path ["a", "b", "c"] results in rule R, regardless of the 
 
 # Requirements
 
-The code has been tested with the Swift 5.1 and XCode 11.2.1.
+The code has been tested with Swift 5.1 using XCode 11.2.1, and with Swift 5.2 using XCode 11.6.

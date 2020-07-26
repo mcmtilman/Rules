@@ -111,23 +111,3 @@ extension PredicateTests {
     typealias IsSuffix = Predicate.IsSuffix
 
 }
-
-
-/**
- Predicate test suite.
- */
-extension PredicateTests {
-    
-    static var allTests = [
-        ("testEvalContains", testEvalContains),
-        ("testEvalContainsNot", testEvalContainsNot),
-        ("testEvalIsEmpty", testEvalIsEmpty),
-        ("testEvalIsNotEmpty", testEvalIsNotEmpty),
-        ("testEvalIsNil", testEvalIsNil),
-        ("testEvalIsNotNil", testEvalIsNotNil),
-        ("testEvalIsPrefix", testEvalIsPrefix),
-        ("testEvalIsSubstring", testEvalIsSubstring),
-        ("testEvalIsSuffix", testEvalIsSuffix),
-    ]
-
-}

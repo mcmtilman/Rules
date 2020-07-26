@@ -8,20 +8,18 @@
 //
 
 /**
- Superclass for rules.
  A rule evalutes in a given context to true or false.
  The rule execution may depend on a pre-condition (the rule must *match* the context).
  If the rule pre-condition does not match the context, the result is nil.
+ Rules may be composed by means of rule sets.
 */
-public class Rule {
+public protocol Rule: class {
     
     // MARK: Evaluating
     
     /// Returns the result of evaluating the rule in given context.
     /// The result is either true, false or nil. A nil result indicates a failure to determine a Boolean outcome. This may e.g. indicate that the rule's pre-condition does not match the input, or that no matching nested rules were found.
-    public func eval<C>(in context: C) throws -> Bool? {
-        fatalError("Abstract method must be overridden")
-    }
+    func eval<C>(in context: C) throws -> Bool?
 
 }
 
@@ -59,7 +57,7 @@ public final class ConditionAssertionRule<A: Expression, B: Expression>: Rule wh
     /// Evaluates the rule in given context, according to the following strategy:
     /// * If the rule matches, answer the result of evaluating the assertion.
     /// * Return nil otherwise.
-    public override func eval<C>(in context: C) throws -> Bool? {
+    public func eval<C>(in context: C) throws -> Bool? {
         guard try condition.eval(in: context) else { return nil }
         
         return try assertion.eval(in: context)
@@ -108,7 +106,7 @@ public final class RuleSet<A: Expression>: Rule where A.Eval == Bool {
     /// * If the rule set does not match or if no rule in the set has a boolean result return nil.
     /// * If *matchAll* is true (default), return the AND-combination of the results of all matching rules.
     /// * Otherwise, return the result of the first matching rule.
-    public override func eval<C>(in context: C) throws -> Bool? {
+    public func eval<C>(in context: C) throws -> Bool? {
         guard try condition.eval(in: context) else { return nil }
         var positiveResults = 0
         

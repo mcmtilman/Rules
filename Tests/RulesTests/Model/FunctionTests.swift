@@ -70,19 +70,3 @@ extension FunctionTests {
     typealias Uppercase = Function.Uppercase
 
 }
-
-
-/**
- Function test suite.
- */
-extension FunctionTests {
-    
-    static var allTests = [
-        ("testEvalIfNil", testEvalIfNil),
-        ("testEvalIfNotNil", testEvalIfNotNil),
-        ("testEvalLength", testEvalLength),
-        ("testEvalLowercase", testEvalLowercase),
-        ("testEvalUppercase", testEvalUppercase),
-    ]
-    
-}
