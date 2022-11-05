@@ -13,7 +13,7 @@
  If the rule pre-condition does not match the context, the result is nil.
  Rules may be composed by means of rule sets.
 */
-public protocol Rule: class {
+public protocol Rule: AnyObject {
     
     // MARK: Evaluating
     

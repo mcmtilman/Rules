@@ -72,7 +72,7 @@
  # Root context key paths only
  
  Only the root context adopts the *Contexual* protocol.
- Key paths from the root to properties of 'nested'' types restrict acess to specific chains.
+ Key paths from the root to properties of 'nested'' types restrict access to specific chains.
 
  ```
  extension X: Contextual {
